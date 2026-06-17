@@ -1,0 +1,283 @@
+<link href="__ADMIN__/css/plugins/colorpicker/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+<link href="__ADMIN__/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<body class="gray-bg  mini-navbar pace-done">
+
+<div class="ibox-content modal-form-shell">
+    <form class="form-horizontal" id="addCard">
+        <div class="form-horizontal modal-form-body">
+            <div class="col-sm-12" style="padding-left: 0px;">
+                <div class="form-group">
+                    <label class="col-xs-2 col-sm-2 control-label">所属软件</label>
+
+                    <div class="col-xs-10 col-sm-10">
+                        <select class="form-control m-b selectpicker" name="sid" id="sid" data-live-search="true"
+                                data-live-search-placeholder="搜索" data-style="btn-white" data-container="body">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 col-sm-2 control-label">卡密类型</label>
+                    <div class="col-xs-2 col-sm-2">
+                        <select class="form-control m-b selectpicker" id="type" name="type" data-style="btn-white" data-container="body">
+                            <option value="-1" selected>不限</option>
+                            <option value="0">点卡</option>
+                            <option value="1">分卡</option>
+                            <option value="2">时卡</option>
+                            <option value="3">天卡</option>
+                            <option value="4">周卡</option>
+                            <option value="5">月卡</option>
+                            <option value="6">年卡</option>
+                        </select>
+                    </div>
+                    <label class="col-xs-1 col-sm-1 control-label" style="padding-left: 0; padding-right: 0; text-align: right;">卡值</label>
+                    <div class="col-xs-3 col-sm-3">
+                        <select class="form-control m-b selectpicker" name="cardValue" id="cardValue" data-style="btn-white" data-container="body">
+                            <option value="-1" selected>不限</option>
+                        </select>
+                    </div>
+                    <label class="col-xs-2 col-sm-2 control-label">卡状态</label>
+                    <div class="col-xs-2 col-sm-2">
+                        <select class="form-control m-b selectpicker" name="status" id="status" data-style="btn-white" data-container="body">
+                            <option value="-1" selected>不限</option>
+                            <option value="0">未使用</option>
+                            <option value="1">已使用</option>
+                            <option value="2">已封停</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 col-sm-2 control-label">创建时间</label>
+                    <div class="col-xs-10 col-sm-10">
+                        <input placeholder="范围时间选择" class="form-control layer-date" name="end" id="end" readonly style="cursor: pointer;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 col-sm-2 control-label">备注包含</label>
+
+                    <div class="col-xs-10 col-sm-10">
+                        <textarea class="form-control" rows="3" placeholder="请输入内容"
+                                  name="remark"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 modal-form-footer">
+            <div class="col-xs-offset-5 col-sm-offset-5">
+                <button class="btn btn-sm btn-white" type="submit">确定删除</button>
+                &nbsp;&nbsp;
+                <button class="btn btn-sm btn-white" type="button" onclick="closeP()">取消删除</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__ADMIN__/js/plugins/layer/laydate/laydate.js"></script>
+<link href="__ADMIN__/css/bootstrap-select.min.css" rel="stylesheet"/>
+<script src="__ADMIN__/js/bootstrap-select.min.js"></script>
+<script src="__ADMIN__/js/i18n/defaults-zh_CN.min.js"></script>
+<script>
+    $.fn.selectpicker.Constructor.DEFAULTS.size = 5;
+
+    //日期时间范围
+    //日期时间范围
+    laydate.render({
+        elem: '#end'
+        ,type: 'datetime'
+        ,range: true
+        ,trigger: 'click'
+        ,min: '2019-05-01'
+        ,max: '2038-01-01'
+    });
+    function closeP() {
+        //关闭iframe页面
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.close(index);
+    }
+    //jquery加载后执行的
+    (function ($) {
+        //ajax获取用户所有软件数据
+        $.ajax({
+            type: 'get',
+            url: '/admin/soft/getSoftListsimple.html',
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                //请求成功
+                if (data.code < 0) {
+                    showToast(data.msg, 'error');
+                } else {
+                    if(data.total<=1)$("#sid").append($("<option value='0'>请选择</option>"));
+                    $("#sid").append($("<option value='-1'>全部软件</option>"));
+                    for (i = 0; i < data.total; i++) {
+                        var pack = data.rows[i].name;
+                        $("#sid").append($("<option value='" + data.rows[i].id + "'>" + pack + "</option>"));
+                    }
+                    $("#sid").selectpicker("refresh");
+                    loadCardValues();
+                }
+            },
+            error: function () {
+                // view("异常！");
+                showToast("网络错误！", 'error');
+            }
+        });
+        //表单验证
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        $("#addCard").validate({
+            rules: {
+                cardNum: {
+                    required: true,
+                    minlength: 1,
+                    maxlength: 8,
+                    digits:true
+                },
+                cardHead: {
+                    maxlength:4,
+                    chrnum:true
+                }
+            },
+            messages: {
+                cardNum:{
+                    digits:"必须输入整数"
+                }
+            },
+            submitHandler: function (form) {
+
+                if ($("#sid").val() == '' || $("#sid").val() == null) {
+                    showToast('所属软件必须选择', 'error');
+                    return false;
+                }
+                var formParam = $("#addCard").serialize();
+                layer.confirm("删除会导致相关数据不可恢复<br>您确定要删除这些卡密吗？",{title: '温馨提示', formType: 1},function(index){
+                    $.ajax({
+                        url : "/admin/card/userDeleteMoreCard",
+                        type:"post",
+                        dataType:"json",
+                        data:formParam,
+                        success:function(data){
+                            if(data.code==0){
+                                parent.layer.alert(data.msg || '操作成功', {
+                                title: '提示',
+                                btn: ['知道了']
+                            }, function(index){
+                                parent.layer.close(index);
+                                try {
+                                    if (window.parent && window.parent.$ && window.parent.$('.J_iframe:visible').length > 0) {
+                                        var ciframe = window.parent.$('.J_iframe:visible')[0].contentWindow;
+                                        if (ciframe.reload) { ciframe.reload(); } else { ciframe.location.reload(); }
+                                    } else if (window.parent && window.parent.reload && typeof window.parent.reload === 'function') {
+                                        window.parent.reload();
+                                    }
+                                } catch (e) {}
+                                var idx = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(idx);
+                            });
+                            }else{
+                                showToast(data.msg, 'success')
+                            }
+                        },
+                        error:function(XMLHttpRequest, textStatus, errorThrown){
+                            showToast("系统在开小差，请稍后再试", "info");
+                        }
+                    });
+                });
+
+            }
+        });
+        $("#sid, #type").change(function () {
+            loadCardValues();
+        });
+    })(jQuery);
+    function getSelectedText(name) {
+        var obj = document.getElementById(name);
+        for (i = 0; i < obj.length; i++) {
+            if (obj[i].selected == true) {
+                return obj[i].innerText; //关键是通过option对象的innerText属性获取到选项文本
+            }
+        }
+    }
+
+
+    //加载卡密类型
+    function loadType()
+    {
+        var id = $("#sid").val();
+        $.ajax({
+            type: 'get',
+            url: '/admin/card/getCardTypeSimple.html?id=' + id,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                //请求成功
+                if (data.code < 0) {
+                    showToast(data.msg, 'error');
+                } else {
+                    if (data.total == 0) {
+                        showToast("软件还没有添加卡密类型哦", 'error');
+                        return false;
+                    }
+                    $("#type").html("");//清空重置
+                     $("#type").append($("<option value='-1'>所有卡类</option>"))
+                    for (i = 0; i < data.total; i++) {
+                        var pack = "";
+                        switch (data.rows[i].type) {
+                            case 0:
+                                pack = '点卡';
+                                break;
+                            case 1:
+                                pack = '分钟卡';
+                                break;
+                            case 2:
+                                pack = '小时卡';
+                                break;
+                            case 3:
+                                pack = '天卡';
+                                break;
+                            case 4:
+                                pack = '周卡';
+                                break;
+                            case 5:
+                                pack = '月卡';
+                                break;
+                            case 6:
+                                pack = '年卡';
+                                break;
+                            default :break;
+                        }
+                        pack='[面值]:'+data.rows[i].cardValue+pack;
+                        $("#type").append($("<option value='" + data.rows[i].id + "'>" + pack + "</option>"))
+                    }
+                    $("#type").selectpicker("refresh");
+                }
+            },
+            error: function () {
+                // view("异常！");
+                showToast("网络错误！", 'error');
+            }
+        });
+    }
+
+    function loadCardValues() {
+        var sid = $("#sid").val();
+        var type = $("#type").val();
+        $("#cardValue").html('<option value="-1">不限</option>');
+        $("#cardValue").selectpicker("refresh");
+        if (sid == '' || sid == null) {
+            return;
+        }
+        $.ajax({
+            type: 'get',
+            url: '/admin/card/getCardValuesBySid.html?sid=' + sid + '&type=' + type,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                if (data.code === 0 && data.values) {
+                    for (var i = 0; i < data.values.length; i++) {
+                        var val = data.values[i];
+                        $("#cardValue").append($("<option value='" + val + "'>" + val + "</option>"));
+                    }
+                    $("#cardValue").selectpicker("refresh");
+                }
+            }
+        });
+    }
+</script>

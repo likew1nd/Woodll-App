@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOODLL 网络验证 - 系统环境检测</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/font-awesome-4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/install.css">
+    <script>
+        function nextStep() {
+            <?php
+            $php_pass = version_compare(PHP_VERSION, '8.0.0', '>=');
+            $openssl_pass = extension_loaded("openssl") && function_exists("openssl_pkey_new");
+            $dir1 = is_writable('../../');
+            $dir2 = is_writable('../uploads');
+            $dir3 = is_writable('../../runtime');
+            $dir4 = is_writable('.');
+            
+            if ($php_pass && $openssl_pass && $dir1 && $dir2 && $dir3 && $dir4):
+            ?>
+            location.href = './index.php?c=create';
+            <?php else: ?>
+            alert('请先解决不符合要求的系统环境或目录权限！');
+            <?php endif; ?>
+        }
+    </script>
+</head>
+<body>
+    <div class="install-wrapper">
+        <!-- Brand Header -->
+        <div class="brand-header animate-fade-in">
+            <div class="logo-circle">
+                <i class="fa fa-shield"></i>
+            </div>
+            <h1 class="brand-title">WOODLL <span>网络验证系统</span></h1>
+            <p class="brand-subtitle">安装向导 · Premium Installation Wizard</p>
+        </div>
+
+        <!-- Stepper -->
+        <div class="stepper animate-slide-up">
+            <div class="step completed">
+                <span class="step-num">1</span>
+                <span class="step-label">使用协议</span>
+            </div>
+            <div class="step-line active"></div>
+            <div class="step active">
+                <span class="step-num">2</span>
+                <span class="step-label">环境检测</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <span class="step-num">3</span>
+                <span class="step-label">创建数据</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <span class="step-num">4</span>
+                <span class="step-label">安装完成</span>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="install-card animate-scale-up">
+            <h2>系统运行环境检测</h2>
+            
+            <table class="table-woodll">
+                <thead>
+                    <tr>
+                        <th width="30%">运行环境</th>
+                        <th width="20%">最低配置</th>
+                        <th width="30%">当前配置</th>
+                        <th width="20%">检查结果</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>操作系统</td>
+                        <td>不限</td>
+                        <td><?php echo php_uname('s'); ?></td>
+                        <td><span class="badge-woodll badge-success"><i class="fa fa-check"></i> 符合</span></td>
+                    </tr>
+                    <tr>
+                        <td>PHP 版本</td>
+                        <td>8.0.0+</td>
+                        <td><?php echo PHP_VERSION; ?></td>
+                        <td>
+                            <?php if (version_compare(PHP_VERSION, '8.0.0', '>=')): ?>
+                                <span class="badge-woodll badge-success"><i class="fa fa-check"></i> 符合</span>
+                            <?php else: ?>
+                                <span class="badge-woodll badge-danger"><i class="fa fa-times"></i> 低于8.0</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>OpenSSL 扩展</td>
+                        <td>开启</td>
+                        <td>
+                            <?php echo extension_loaded("openssl") && function_exists("openssl_pkey_new") ? "已加载" : "未加载"; ?>
+                        </td>
+                        <td>
+                            <?php if (extension_loaded("openssl") && function_exists("openssl_pkey_new")): ?>
+                                <span class="badge-woodll badge-success"><i class="fa fa-check"></i> 符合</span>
+                            <?php else: ?>
+                                <span class="badge-woodll badge-danger"><i class="fa fa-times"></i> 未开启</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>目录与配置文件权限</h2>
+            <table class="table-woodll">
+                <thead>
+                    <tr>
+                        <th width="40%">目录/文件路径</th>
+                        <th width="30%">所需状态</th>
+                        <th width="30%">当前权限</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>./ (项目根目录，用于生成 .env)</td>
+                        <td>可写</td>
+                        <td>
+                            <?php if (is_writable('../../')): ?>
+                                <span class="badge-woodll badge-success"><i class="fa fa-check"></i> 可写</span>
+                            <?php else: ?>
+                                <span class="badge-woodll badge-danger"><i class="fa fa-times"></i> 不可写</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>./public/uploads (图片附件上传)</td>
+                        <td>可写</td>
+                        <td>
+                            <?php if (is_writable('../uploads')): ?>
+                                <span class="badge-woodll badge-success"><i class="fa fa-check"></i> 可写</span>
+                            <?php else: ?>
+                                <span class="badge-woodll badge-danger"><i class="fa fa-times"></i> 不可写</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>./runtime (程序运行日志与缓存)</td>
+                        <td>可写</td>
+                        <td>
+                            <?php if (is_writable('../../runtime')): ?>
+                                <span class="badge-woodll badge-success"><i class="fa fa-check"></i> 可写</span>
+                            <?php else: ?>
+                                <span class="badge-woodll badge-danger"><i class="fa fa-times"></i> 不可写</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>./public/install (安装向导锁文件目录)</td>
+                        <td>可写</td>
+                        <td>
+                            <?php if (is_writable('.')): ?>
+                                <span class="badge-woodll badge-success"><i class="fa fa-check"></i> 可写</span>
+                            <?php else: ?>
+                                <span class="badge-woodll badge-danger"><i class="fa fa-times"></i> 不可写</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="actions">
+                <a class="btn-woodll btn-secondary" href="./index.php?c=agreement">
+                    <i class="fa fa-arrow-left"></i> 上一步
+                </a>
+                <a class="btn-woodll btn-primary" href="javascript:;" onclick="nextStep()">
+                    下一步 <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

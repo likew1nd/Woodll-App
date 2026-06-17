@@ -1,0 +1,514 @@
+{__NOLAYOUT__}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOODLL 控制台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="__ADMIN__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__ADMIN__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__ADMIN__/css/animate.css" rel="stylesheet">
+    <style>
+        :root {
+            --mx: 50%;
+            --my: 50%;
+            --accent: #38bdf8;
+            --accent-strong: #2563eb;
+            --panel: rgba(8, 15, 31, 0.66);
+            --panel-border: rgba(255, 255, 255, 0.16);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', Arial, sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+            color: #f8fafc;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.22), transparent 30%),
+                radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.28), transparent 28%),
+                linear-gradient(135deg, #020617, #111827 55%, #0f172a);
+        }
+
+        .bing-bg,
+        .bg-scrim,
+        .cursor-glow,
+        .noise-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .bing-bg {
+            z-index: 0;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transform: scale(1.04);
+            transition: opacity 900ms ease, transform 1600ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .bing-bg.is-loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .bg-scrim {
+            z-index: 1;
+            background:
+                linear-gradient(90deg, rgba(2, 6, 23, 0.84), rgba(2, 6, 23, 0.48) 48%, rgba(2, 6, 23, 0.72)),
+                linear-gradient(180deg, rgba(2, 6, 23, 0.58), rgba(2, 6, 23, 0.86));
+        }
+
+        .cursor-glow {
+            z-index: 2;
+            background:
+                radial-gradient(circle 260px at var(--mx) var(--my), rgba(125, 211, 252, 0.28), rgba(59, 130, 246, 0.12) 42%, transparent 72%);
+            mix-blend-mode: screen;
+            opacity: 0.95;
+            transition: opacity 200ms ease;
+        }
+
+        .noise-layer {
+            z-index: 3;
+            opacity: 0.17;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+        }
+
+        .page-shell {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: grid;
+            grid-template-columns: minmax(24px, 1fr) minmax(320px, 430px) minmax(24px, 1fr);
+            align-items: center;
+            padding: 32px 0;
+        }
+
+        .login-container {
+            grid-column: 2;
+            position: relative;
+            width: 100%;
+            padding: 38px;
+            border: 1px solid var(--panel-border);
+            border-radius: 22px;
+            background:
+                linear-gradient(145deg, rgba(15, 23, 42, 0.78), rgba(8, 15, 31, 0.58)),
+                var(--panel);
+            box-shadow: 0 26px 80px rgba(0, 0, 0, 0.44);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.16), transparent 34%);
+            opacity: 0.6;
+        }
+
+        .login-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-title {
+            margin: 0 0 8px;
+            color: #ffffff;
+            font-size: 30px;
+            line-height: 1.12;
+            font-weight: 700;
+            letter-spacing: 0;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: rgba(203, 213, 225, 0.78);
+            font-size: 14px;
+            line-height: 1.65;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            color: rgba(226, 232, 240, 0.9);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            width: 18px;
+            height: 18px;
+            color: rgba(148, 163, 184, 0.9);
+            pointer-events: none;
+            transition: color 180ms ease, opacity 180ms ease;
+        }
+
+        .form-control {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 48px;
+            padding: 12px 16px 12px 48px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            color: #f8fafc;
+            background: rgba(2, 6, 23, 0.54);
+            font-size: 15px;
+            box-shadow: none;
+            transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+        }
+
+        .form-control::placeholder {
+            color: rgba(148, 163, 184, 0.72);
+        }
+
+        .form-control:focus {
+            background: rgba(2, 6, 23, 0.72);
+            border-color: rgba(125, 211, 252, 0.9);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.16);
+            color: #ffffff;
+        }
+
+        .form-control:focus + .field-icon {
+            color: #7dd3fc;
+        }
+
+        .btn-login {
+            width: 100%;
+            height: 50px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            box-shadow: 0 16px 36px rgba(37, 99, 235, 0.28);
+            transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.06);
+            box-shadow: 0 20px 46px rgba(37, 99, 235, 0.38);
+        }
+
+        .btn-login:active {
+            transform: translateY(1px);
+        }
+
+        .btn-login[disabled] {
+            opacity: 0.72;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+            color: rgba(203, 213, 225, 0.78);
+            font-size: 13px;
+        }
+
+        .checkbox-wrapper label {
+            display: inline-flex;
+            align-items: center;
+            min-height: 32px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .checkbox-wrapper input {
+            margin: 0 8px 0 0;
+            cursor: pointer;
+        }
+
+        .alert-error {
+            display: none;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border: 1px solid rgba(248, 113, 113, 0.24);
+            border-radius: 12px;
+            color: #fecaca;
+            background: rgba(127, 29, 29, 0.28);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .bing-credit {
+            position: fixed;
+            z-index: 11;
+            right: 18px;
+            bottom: 14px;
+            max-width: min(520px, calc(100vw - 36px));
+            color: rgba(226, 232, 240, 0.68);
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: right;
+            pointer-events: none;
+        }
+
+        @media (max-width: 860px) {
+            .page-shell {
+                grid-template-columns: 20px minmax(0, 1fr) 20px;
+                padding: 24px 0;
+            }
+
+        }
+
+        @media (max-width: 520px) {
+            body {
+                overflow-y: auto;
+            }
+
+            .login-container {
+                padding: 30px 22px;
+                border-radius: 18px;
+            }
+
+            .logo-title {
+                font-size: 26px;
+            }
+
+            .bing-credit {
+                display: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bing-bg,
+            .btn-login,
+            .form-control,
+            .field-icon {
+                transition: none;
+            }
+
+            .cursor-glow {
+                opacity: 0.18;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bing-bg" id="bingBg"></div>
+    <div class="bg-scrim"></div>
+    <div class="cursor-glow"></div>
+    <div class="noise-layer"></div>
+
+    <main class="page-shell">
+        <section class="login-container animated fadeInDown" aria-label="WOODLL 控制台登录">
+            <div class="login-inner">
+                <h1 class="logo-title">WOODLL 控制台</h1>
+                <div class="subtitle">请输入管理员账号和密码进入控制台。</div>
+
+                <div class="alert alert-error" id="errorMsg" role="alert"></div>
+
+                <form id="loginForm" method="post" autocomplete="on">
+                    <div class="form-group">
+                        <label for="username">管理员账号</label>
+                        <div class="input-icon-wrapper">
+                            <input type="text" id="username" class="form-control" placeholder="请输入账号" required autocomplete="username">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M20 21a8 8 0 0 0-16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                <path d="M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" stroke="currentColor" stroke-width="1.8"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">安全密码</label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" id="password" class="form-control" placeholder="请输入密码" required autocomplete="current-password">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M7 10V8a5 5 0 0 1 10 0v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                <path d="M6.5 10h11A2.5 2.5 0 0 1 20 12.5v6A2.5 2.5 0 0 1 17.5 21h-11A2.5 2.5 0 0 1 4 18.5v-6A2.5 2.5 0 0 1 6.5 10Z" stroke="currentColor" stroke-width="1.8"/>
+                                <path d="M12 15v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-wrapper">
+                        <label>
+                            <input type="checkbox" id="autoLogin"> 自动登录
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="btnSubmit">立即登录</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <div class="bing-credit" id="bingCredit"></div>
+
+    <script src="__ADMIN__/js/jquery.min.js?v=2.1.4"></script>
+    <script>
+        (function() {
+            var root = document.documentElement;
+            var target = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+            var smooth = { x: target.x, y: target.y };
+            var rafId = null;
+
+            function animateCursor() {
+                smooth.x += (target.x - smooth.x) * 0.12;
+                smooth.y += (target.y - smooth.y) * 0.12;
+                root.style.setProperty('--mx', smooth.x + 'px');
+                root.style.setProperty('--my', smooth.y + 'px');
+                rafId = window.requestAnimationFrame(animateCursor);
+            }
+
+            window.addEventListener('mousemove', function(e) {
+                target.x = e.clientX;
+                target.y = e.clientY;
+            }, { passive: true });
+
+            window.addEventListener('touchmove', function(e) {
+                if (e.touches && e.touches.length) {
+                    target.x = e.touches[0].clientX;
+                    target.y = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            rafId = window.requestAnimationFrame(animateCursor);
+
+            window.addEventListener('beforeunload', function() {
+                if (rafId) {
+                    window.cancelAnimationFrame(rafId);
+                }
+            });
+        })();
+
+        (function() {
+            var bg = document.getElementById('bingBg');
+            var credit = document.getElementById('bingCredit');
+            var api = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=zh-CN';
+            var fallbackImage = 'https://api.dujin.org/bing/1920.php';
+
+            function setImage(url, title) {
+                var img = new Image();
+                img.onload = function() {
+                    bg.style.backgroundImage = 'url("' + url + '")';
+                    bg.classList.add('is-loaded');
+                    if (title) {
+                        credit.textContent = title;
+                    }
+                };
+                img.onerror = function() {
+                    bg.classList.remove('is-loaded');
+                };
+                img.src = url;
+            }
+
+            if (window.fetch) {
+                fetch(api, { cache: 'no-store' })
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        if (!data || !data.images || !data.images.length) {
+                            setImage(fallbackImage, 'Bing daily image');
+                            return;
+                        }
+                        var item = data.images[Math.floor(Math.random() * data.images.length)];
+                        var url = item.url.indexOf('http') === 0 ? item.url : 'https://cn.bing.com' + item.url;
+                        setImage(url, item.copyright || 'Bing 每日图片');
+                    })
+                    .catch(function() {
+                        setImage(fallbackImage, 'Bing daily image');
+                    });
+            } else {
+                setImage(fallbackImage, 'Bing daily image');
+            }
+        })();
+
+        $(document).ready(function() {
+            if (window.top !== window.self) {
+                window.top.location = window.location;
+            }
+
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                var username = $.trim($('#username').val());
+                var password = $('#password').val();
+                var autoLogin = $('#autoLogin').is(':checked') ? 'on' : 'off';
+                var $btn = $('#btnSubmit');
+
+                if (!username || !password) {
+                    $('#errorMsg').text('请输入账号和密码').fadeIn();
+                    return;
+                }
+
+                $btn.prop('disabled', true).text('登录中...');
+                $('#errorMsg').hide();
+
+                $.ajax({
+                    url: '/doLogin.html',
+                    type: 'POST',
+                    data: {
+                        username: username,
+                        password: password,
+                        autoLogin: autoLogin
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.code === 0) {
+                            window.location.href = '/';
+                        } else {
+                            $('#errorMsg').text(res.msg || '登录失败，请检查账号和密码').fadeIn();
+                            $btn.prop('disabled', false).text('立即登录');
+                        }
+                    },
+                    error: function() {
+                        $('#errorMsg').text('网络请求失败，请稍后重试').fadeIn();
+                        $btn.prop('disabled', false).text('立即登录');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

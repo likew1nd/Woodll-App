@@ -1,0 +1,398 @@
+<body class="gray-bg">
+<div class="row  border-bottom white-bg dashboard-header">
+    <blockquote class="text-warning" style="font-size:14px">
+        <?php
+         echo config('app_debug')?"<h1>当前开启了调试模式，api接口会无法解密。</h1><br />":"";
+
+        ?>
+        <h3>温馨提示：该版本为二次开发版本，若您需要原版本还请辛苦您移步至原作者Q群下载</h3><br />
+        尊敬的开发者，欢迎使用 WOODLL 网络验证系统V1.3<br/>
+        原作者官方QQ群:365011408 原作者QQ：214783030，有不懂得群文件夹看详细视频教程<br />
+        二次开发人QQ：2974808369 个人网站（不是原作者的）：https://sy.xuieyf.com<br />
+        <span style="color:red;">37ax为香港服务器，目前对接用户较多，网络并不稳定，并且为开源算法不安全，请自行搭建系统对接不要直接对接官网</span>
+        <h3 class="text-success">
+            免费！免费！免费！功能强大
+            <br/>
+            完美的版本控制,多开控制,灵活管理
+            <br/>
+            灵活,强加密，软件交易大厅,软件主页卡密出售
+            <br />支持QQ,微信,支付宝购买卡密
+            <br /> Web API接口支持任何语言调用
+            <br />欢迎提供防破解思路，欢迎为系统编写其它语言例子，让本系统做的更好
+            <br />原作者官方网站:<a href="https://37ax.cn/" target="_blank">https://37ax.cn/</a>
+			<br />接单，软件开发，安卓脱壳逆算法 &nbsp;&nbsp;&nbsp;&nbsp; 
+			<br /><a href="https://bbs.125.la/" target="_blank" style="color:red;">群文件或精益论坛获取调用例子</a>
+        </h3>
+        <a href="#" target="_blank" class="label label-primary">网络版瑞士军刀</a>
+    </blockquote>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="vertical-timeline-block">
+                <div class="vertical-timeline-icon navy-bg">
+                    <i class="fa fa-file-text"></i>
+                </div>
+                <div class="vertical-timeline-content">
+                    <h2>更新</h2>
+                    <p> 1.修复PHP安装页面PHP版本判断错误bug<br />
+                    </p>
+                    <span class="vertical-date">
+                                        2024-02-02 <br>
+                                        <small>1:36</small>
+                                    </span>
+                </div>
+                <div class="vertical-timeline-content">
+                    <h2>更新</h2>
+                    <p>
+                        1.修复部分小Bug<br />
+                        2.部分有所小改动<br />
+                        
+
+                    </p>
+                                            <span class="vertical-date">
+                                        2022-9-12 二改 <br>
+                                        <small>05:00</small>
+                                    </span>
+                </div>
+                <div class="vertical-timeline-content">
+                    <h2>更新</h2>
+                    <p> 1.增加软件用户邮箱找回密码功能,用法浏览器打开域名/susf.html?id=487(软件编号)<br />
+                        2.修复是否允许换绑不校验的问题<br />
+
+
+                    </p>
+                                            <span class="vertical-date">
+                                        2019-08-27 <br>
+                                        <small>20:02</small>
+                                    </span>
+                </div>
+                <div class="vertical-timeline-content">
+                    <h2>更新</h2>
+                    <p> 1.修改sign签名验证方法。<br />
+                        2.软件密钥用RSA传输。<br />
+                        3.API接口成功状态码从0修改成200。<br />
+                        4.增加赠送点数与时间<br />
+                        5.增加卡密信息查询接口<br />
+                        6.心跳包可选用websocket的方式,模块中用的hpsocket,增加群发即时消息,指定用户发送消息<br />
+						7.增加留言反馈接口<br />
+						8.登录记录增加eid字段，防止遍历碰撞
+
+                    </p>
+                                            <span class="vertical-date">
+                                        2019-06-18 <br>
+                                        <small>21:33</small>
+                                    </span>
+                </div>
+                <div class="vertical-timeline-content">
+                    <h2>更新</h2>
+                    <p> 1.添加卡密高级删除功能。<br />
+                        2.增加版本查询API接口。<br />
+                        3.修复防破管理搜索无效bug。<br />
+                        4.心跳包返回服务器时间，防止封包被拦截伪造,请判断这个值<br />
+                        5.注册赠送换绑无效的问题<br />
+                        6.其它优化
+
+                    </p>
+                                            <span class="vertical-date">
+                                        2019-06-04 <br>
+                                        <small>01:00</small>
+                                    </span>
+                </div>
+                <div class="vertical-timeline-content">
+                    <h2>更新</h2>
+                    <p> 1.修复已知BUG<br/>
+                        2.增加安装向导
+                    </p>
+                                            <span class="vertical-date">
+                                        2019-05-28 <br>
+                                        <small>02:00</small>
+                                    </span>
+                </div>
+                <div class="vertical-timeline-content">
+                    <h2>更新</h2>
+                    <p>1.修复心跳包不检测用户是否到期<br />
+                        2.添加扣时API接口<br />
+                        3.删除模块防OD附加导致在windows server上的内存引起的奔溃问题<br />
+                        4.添加驱动防破解模块与例子,注意:驱动没有源码,请自行测试,使用的SA云保护的驱动,测试结果,和强壳一起使用可以达到防破加免杀(自测,不保证)<br />
+                    </p>
+                                            <span class="vertical-date">
+                                        2019-05-11 <br>
+                                        <small>15:00</small>
+                                    </span>
+                </div>
+            </div>
+            <div class="vertical-timeline-block">
+                <div class="vertical-timeline-icon navy-bg">
+                    <i class="fa fa-file-text"></i>
+                </div>
+                <div class="vertical-timeline-content">
+                    <h2>更新</h2>
+                    <p>1.远程JS 长度限制问题<br />
+                        2.远程JS 无法删除的问题<br />
+                        3.修改远程js 远程变量 算法转发,调用必须用户登录状态<br />
+                        4.封包时间校验,不得与服务器时间相差大于10秒<br />
+                    </p>
+                                            <span class="vertical-date">
+                                        2019-05-10 <br>
+                                        <small>19:50</small>
+                                    </span>
+                </div>
+            </div>
+
+            <div class="vertical-timeline-block">
+                <div class="vertical-timeline-icon navy-bg">
+                    <i class="fa fa-file-text"></i>
+                </div>
+                <div class="vertical-timeline-content">
+                    <h2>发布</h2>
+                    <p>1.0版本发布,功能强大,灵活管理,远程防破
+                    </p>
+                                            <span class="vertical-date">
+                                        2019-05-08 <br>
+                                        <small>03:00</small>
+                                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <h2>
+                赞助列表
+            </h2>
+            开发系统耗费很多时间，免费开源如果对你有帮助，请赞助作者，alipay：13808437735 qq：214783030，赞助20元及以上，可以添加广告位，官网以及源码
+            <table class="table table-hover table-mail">
+                <tbody>
+                <tr class="unread">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact">名称
+                    </td>
+                    <td class="mail-subject">赞助金额(元)
+                    </td>
+                    <td class="">广告
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="http://liebaoidc.com" target="_blank"><b style="color:red;">猎豹IDC</b></a>
+                    </td>
+                    <td class="mail-subject"> <a href="http://liebaoidc.com" target="_blank"><b style="color:red;">666.66</b></a>
+                    </td>
+                    <td class="">
+                        <a href="http://liebaoidc.com" target="_blank"><b style="color:red;">猎豹IDC 香港cn2免备案 1核1G 168元/年<br>山东高防 100G防御 100M带宽 828元/年</b></a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="https://jq.qq.com/?_wv=1027&k=51MdpqQ" target="_blank">小菜牛</a>
+                    </td>
+                    <td class="mail-subject"> <a href="https://jq.qq.com/?_wv=1027&k=51MdpqQ" target="_blank">188.88</a>
+                    </td>
+                    <td class="">
+                        <a href="https://jq.qq.com/?_wv=1027&k=51MdpqQ" target="_blank">乐玩模块交流群</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="http://t.cn/AilTeT7n" target="_blank">QQ1292819780</a>
+                    </td>
+                    <td class="mail-subject"> <a href="http://t.cn/AilTeT7n" target="_blank">50</a>
+                    </td>
+                    <td class="">
+                        <a href="http://t.cn/AilTeT7n" target="_blank">LOL稳定奔放走砍脚本http://t.cn/AilTeT7n</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="http://www.927faka.com" target="_blank">上仙</a>
+                    </td>
+                    <td class="mail-subject"> <a href="http://www.927faka.com" target="_blank">50</a>
+                    </td>
+                    <td class="">
+                        <a href="http://www.927faka.com" target="_blank">927发卡网费率低于2%</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="#" target="_blank">传奇大老虎(----)</a>
+                    </td>
+                    <td class="mail-subject"> <a href="#" target="_blank">100</a>
+                    </td>
+                    <td class="">
+                        <a href="#" target="_blank">暂无</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="#" target="_blank">二蛋蛋</a>
+                    </td>
+                    <td class="mail-subject"> <a href="#" target="_blank">66</a>
+                    </td>
+                    <td class="">
+                        <a href="#" target="_blank">暂无</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="#" target="_blank">Lookout夕阳</a>
+                    </td>
+                    <td class="mail-subject"> <a href="#" target="_blank">50</a>
+                    </td>
+                    <td class="">
+                        <a href="#" target="_blank">暂无</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="http://www.ra2ol.com/" target="_blank">Nic</a>
+                    </td>
+                    <td class="mail-subject"> <a href="http://www.ra2ol.com/" target="_blank">50</a>
+                    </td>
+                    <td class="">
+                        <a href="http://www.ra2ol.com/" target="_blank">红色警戒2战网对战平台</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="http://wpa.qq.com/msgrd?v=3&uin=1392220236&site=qq&menu=yes" target="_blank">CQ
+                    </a>
+                    </td>
+                    <td class="mail-subject"> <a href="http://wpa.qq.com/msgrd?v=3&uin=1392220236&site=qq&menu=yes" target="_blank">30</a>
+                    </td>
+                    <td class="">
+                        <a href="http://wpa.qq.com/msgrd?v=3&uin=1392220236&site=qq&menu=yes" target="_blank">微信hook全功能联系QQ 1392220236</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="http://wpa.qq.com/msgrd?v=3&uin=200532172&site=qq&menu=yes" target="_blank">Jax
+                    </a>
+                    </td>
+                    <td class="mail-subject"> <a href="http://wpa.qq.com/msgrd?v=3&uin=200532172&site=qq&menu=yes" target="_blank">20</a>
+                    </td>
+                    <td class="">
+                        <a href="http://wpa.qq.com/msgrd?v=3&uin=200532172&site=qq&menu=yes" target="_blank">乐玩_大漠_多线程_模拟/自动/联系QQ：200532172</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="https://bbs.wywgw.cn/" target="_blank">昊帝
+                    </a>
+                    </td>
+                    <td class="mail-subject"> <a href="https://bbs.wywgw.cn/" target="_blank">50</a>
+                    </td>
+                    <td class="">
+                        <a href="https://bbs.wywgw.cn/" target="_blank">追梦论坛</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="https://jq.qq.com/?_wv=1027&k=5DeO5wh" target="_blank">。
+                    </a>
+                    </td>
+                    <td class="mail-subject"> <a href="https://jq.qq.com/?_wv=1027&k=5DeO5wh" target="_blank">20</a>
+                    </td>
+                    <td class="">
+                        <a href="https://jq.qq.com/?_wv=1027&k=5DeO5wh" target="_blank">定制网页通讯 二次验证 远程基质更新 +Q1457218028</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="#" target="_blank">赵日天</a>
+                    </td>
+                    <td class="mail-subject"> <a href="#" target="_blank">88.88</a>
+                    </td>
+                    <td class="">
+                        <a href="#" target="_blank">暂无</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="#" target="_blank">蓝大侠</a>
+                    </td>
+                    <td class="mail-subject"> <a href="#" target="_blank">50</a>
+                    </td>
+                    <td class="">
+                        <a href="#" target="_blank">暂无</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="#" target="_blank">老子这个网名有十个字</a>
+                    </td>
+                    <td class="mail-subject"> <a href="#" target="_blank">57.7</a>
+                    </td>
+                    <td class="">
+                        <a href="#" target="_blank">暂无</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="#" target="_blank">孤独</a>
+                    </td>
+                    <td class="mail-subject"> <a href="#" target="_blank">188</a>
+                    </td>
+                    <td class="">
+                        <a href="#" target="_blank">暂无</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="#" target="_blank">Always be with you丶</a>
+                    </td>
+                    <td class="mail-subject"> <a href="#" target="_blank">88</a>
+                    </td>
+                    <td class="">
+                        <a href="#" target="_blank">暂无</a>
+                    </td>
+                </tr>
+                <tr class="read">
+                    <td class="check-mail">
+                        <div class="icheckbox_square-green" style="position: relative;"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                    </td>
+                    <td class="mail-ontact"><a href="#" target="_blank">世界</a>
+                    </td>
+                    <td class="mail-subject"> <a href="#" target="_blank">88</a>
+                    </td>
+                    <td class="">
+                        <a href="#" target="_blank">暂无</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

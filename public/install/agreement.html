@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOODLL 网络验证 - 系统安装向导</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/font-awesome-4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/install.css">
+</head>
+<body>
+    <div class="install-wrapper">
+        <!-- Brand Header -->
+        <div class="brand-header animate-fade-in">
+            <div class="logo-circle">
+                <i class="fa fa-shield"></i>
+            </div>
+            <h1 class="brand-title">WOODLL <span>网络验证系统</span></h1>
+            <p class="brand-subtitle">安装向导 · Premium Installation Wizard</p>
+        </div>
+
+        <!-- Stepper -->
+        <div class="stepper animate-slide-up">
+            <div class="step active">
+                <span class="step-num">1</span>
+                <span class="step-label">使用协议</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <span class="step-num">2</span>
+                <span class="step-label">环境检测</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <span class="step-num">3</span>
+                <span class="step-label">创建数据</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <span class="step-num">4</span>
+                <span class="step-label">安装完成</span>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="install-card animate-scale-up">
+            <h2>使用协议与须知</h2>
+            <div class="agreement-box">
+                <h3>欢迎使用 WOODLL 网络验证系统</h3>
+                <p>WOODLL 网络验证系统是一款面向软件开发者的现代、高效、安全且可视化的云端授权与用户管理中心。在您开始部署和使用本系统前，请务必仔细阅读并理解以下所有条款：</p>
+                
+                <h3>一、部署与运行环境说明</h3>
+                <ul>
+                    <li>本版本已完全重构支持 <span class="highlight-cyan">ThinkPHP 8.1+</span> 最新微内核架构。</li>
+                    <li>要求 PHP 运行环境版本为 <span class="highlight-cyan">8.0 及以上</span>。</li>
+                    <li>网站运行目录（Web Root）必须指向项目的 <span class="highlight-cyan">public</span> 二级目录，严禁直接将项目根目录暴露于 Web 服务下，以确保源代码及核心配置文件安全。</li>
+                    <li>安装向导会自动创建并配置项目根目录下的 <span class="highlight-cyan">.env</span> 环境变量文件。</li>
+                </ul>
+
+                <h3>二、安全与免责条款</h3>
+                <p>1. 本系统仅供授权软件管理、正当用户数据统计及授权分发使用。用户在使用本系统时必须自觉遵守所在国家和地区的相关法律法规，不得用于危害国家安全、传播非法信息、侵害他人合法权益等不正当用途。因用户违规使用引发的一切法律后果和行政责任均由用户自行承担。</p>
+                <p>2. 系统作者及开发团队对用户因使用本系统产生的任何直接、间接、偶然或特殊的财产损失、数据泄露及业务中断不承担任何法律责任。</p>
+                <p>3. 系统支持私有化部署。您应当妥善保管您的数据库凭证、后台管理员账号及密码。本系统不设任何后门，若因自身保管不善、服务器被入侵而导致的数据丢失，作者不承担任何赔偿责任。</p>
+                
+                <h3>三、开源与修改声明</h3>
+                <p>1. 您拥有自由修改、定制或在此基础之上进行二次开发的权利，但必须保留系统的原始版权声明信息。</p>
+                <p>2. 严禁将本系统在未经许可的情况下作为商业化闭源软件二次打包转售。</p>
+            </div>
+
+            <div class="actions">
+                <a class="btn-woodll btn-primary" href="./index.php?c=test">
+                    同意协议并进入下一步 <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

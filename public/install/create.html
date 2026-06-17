@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOODLL 网络验证 - 数据库配置</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/font-awesome-4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/install.css">
+    <script>
+        function validateForm() {
+            var dbHost = document.getElementsByName('DB_HOST')[0].value.trim();
+            var dbPort = document.getElementsByName('DB_PORT')[0].value.trim();
+            var dbName = document.getElementsByName('DB_NAME')[0].value.trim();
+            var dbUser = document.getElementsByName('DB_USER')[0].value.trim();
+            var adminName = document.getElementsByName('adminName')[0].value.trim();
+            var adminPwd = document.getElementsByName('adminPwd')[0].value.trim();
+
+            if (!dbHost || !dbPort || !dbName || !dbUser || !adminName || !adminPwd) {
+                alert('请完整填写数据库连接和管理员基本信息！');
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="install-wrapper">
+        <!-- Brand Header -->
+        <div class="brand-header animate-fade-in">
+            <div class="logo-circle">
+                <i class="fa fa-shield"></i>
+            </div>
+            <h1 class="brand-title">WOODLL <span>网络验证系统</span></h1>
+            <p class="brand-subtitle">安装向导 · Premium Installation Wizard</p>
+        </div>
+
+        <!-- Stepper -->
+        <div class="stepper animate-slide-up">
+            <div class="step completed">
+                <span class="step-num">1</span>
+                <span class="step-label">使用协议</span>
+            </div>
+            <div class="step-line completed"></div>
+            <div class="step completed">
+                <span class="step-num">2</span>
+                <span class="step-label">环境检测</span>
+            </div>
+            <div class="step-line active"></div>
+            <div class="step active">
+                <span class="step-num">3</span>
+                <span class="step-label">创建数据</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <span class="step-num">4</span>
+                <span class="step-label">安装完成</span>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="install-card animate-scale-up">
+            <form action="./index.php?c=success" method="post" onsubmit="return validateForm()">
+                <h2>数据库连接信息</h2>
+                <div class="form-grid" style="margin-bottom: 25px;">
+                    <div class="form-group">
+                        <label>数据库类型</label>
+                        <input class="input-woodll" type="text" name="DB_TYPE" value="mysql" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>服务器地址</label>
+                        <input class="input-woodll" type="text" name="DB_HOST" value="127.0.0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>数据库端口</label>
+                        <input class="input-woodll" type="text" name="DB_PORT" value="3306">
+                    </div>
+                    <div class="form-group">
+                        <label>数据库名称</label>
+                        <input class="input-woodll" type="text" name="DB_NAME" placeholder="例如: woodll_db">
+                    </div>
+                    <div class="form-group">
+                        <label>数据库用户名</label>
+                        <input class="input-woodll" type="text" name="DB_USER" value="root">
+                    </div>
+                    <div class="form-group">
+                        <label>数据库密码</label>
+                        <input class="input-woodll" type="password" name="DB_PWD" placeholder="留空则无密码">
+                    </div>
+                    <div class="form-group form-group-full">
+                        <label>数据表前缀</label>
+                        <input class="input-woodll" type="text" name="DB_PREFIX" value="yz_">
+                    </div>
+                </div>
+
+                <h2>超级管理员账号</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>管理员账号</label>
+                        <input class="input-woodll" type="text" name="adminName" value="admin" placeholder="请输入管理员登录账号">
+                    </div>
+                    <div class="form-group">
+                        <label>登录密码</label>
+                        <input class="input-woodll" type="text" name="adminPwd" value="123456" placeholder="请输入管理员登录密码">
+                    </div>
+                </div>
+
+                <div class="actions" style="margin-top: 30px;">
+                    <a class="btn-woodll btn-secondary" href="./index.php?c=test">
+                        <i class="fa fa-arrow-left"></i> 上一步
+                    </a>
+                    <button class="btn-woodll btn-primary" type="submit">
+                        确认并开始安装 <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

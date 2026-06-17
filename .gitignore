@@ -1,0 +1,14 @@
+*.log
+.env
+composer.phar
+.DS_Store
+Thumbs.db
+/.idea
+/.vscode
+/runtime/*
+!/runtime/.gitignore
+/public/uploads/*
+!/public/uploads/.gitignore
+/.settings
+/.buildpath
+/.project

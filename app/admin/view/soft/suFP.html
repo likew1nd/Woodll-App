@@ -1,0 +1,164 @@
+<style xmlns="http://www.w3.org/1999/html">
+    /*web background*/
+    .container {
+        display: table;
+        height: 100%;
+    }
+
+    
+
+    /* centered columns styles */
+    .row-centered {
+        text-align: center;
+    }
+
+    .col-centered {
+        display: inline-block;
+        float: none;
+        margin-right: -4px;
+    }
+
+    td {
+        height: 50px;;
+    }
+</style>
+<link href="__ADMIN__/css/plugins/colorpicker/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+<link href="__ADMIN__/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<body class="gray-bg  mini-navbar pace-done">
+<div class="container">
+    <div class="row row-centered ">
+        <div class="col-md-6 col-centered">
+            <div class="article-title text-center">
+                <h2></h2>
+
+            </div>
+
+            <div class="ibox-content">
+
+                <form class="form-horizontal" id="buyCard" style="width:100%;height:100%" novalidate="novalidate"
+                      method="get" action="/admin/card/goBuy1" onsubmit="return fp()">
+                    <table class="table">
+                        <h2>{$soft.name} - 找回密码</h2>
+                        <tbody>
+                        <tr>
+                            <td style="width: 150px;"><strong>软件名称：</strong>
+                            </td>
+                            <td><strong>{$soft.name}</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 150px;"><strong>最新版本：</strong>
+                            </td>
+                            <td><strong>{$soft.version}</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 150px;"><strong>用户名：</strong>
+                            </td>
+                            <td><input type="text" class="form-control" name="username" value="" placeholder="输入你的用户名"
+                                       style="border-top: 0;border-left: 0;border-right: 0;"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 150px;"><strong>邮件验证码：</strong>
+                            </td>
+                            <td>
+                                <div class="col-sm-8" style="padding-left: 0;padding-right: 0">
+                                    <input type="text" class="form-control" name="email" value="" placeholder="邮件验证码"
+                                           style="border-top: 0;border-left: 0;border-right: 0;">
+                                </div>
+                                <div class="col-sm-4" style="padding-left: 0;padding-right: 0">
+                                    <input type="button" class="btn btn-outline btn-default" style="width:100px;" value="发送验证码" onclick="sendCode()">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 150px;"><strong>新密码：</strong>
+                            </td>
+                            <td><input type="text" class="form-control" name="newPwd" value="" placeholder="输入你的新密码"
+                                       style="border-top: 0;border-left: 0;border-right: 0;"></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 150px;"><strong>确认新密码：</strong>
+                            </td>
+                            <td><input type="text" class="form-control" name="newPwd2" value="" placeholder="确认你的新密码"
+                                       style="border-top: 0;border-left: 0;border-right: 0;"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-outline btn-default"><i class="fa fa-check">确认修改</i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function sendCode()
+    {
+        var username = $("input[name='username']").val();
+        $.ajax({
+            type: "post",
+            url: "/admin/soft/sendFPCode",
+            dataType: 'json',
+            data: 'sid={$soft.id}&username='+username,
+            success: function (json) {
+
+                   layer.alert(json.msg,{
+                       skin: 'layui-layer-molv'
+                   });
+            },
+            error:function(result) {
+                layer.alert(result,{
+                    skin: 'layui-layer-molv'
+                });
+            }
+        });
+    }
+    function fp()
+    {
+        var username = $("input[name='username']").val();
+        var newPwd = $("input[name='newPwd']").val();
+        var newPwd2 = $("input[name='newPwd2']").val();
+        var email = $("input[name='email']").val();
+        if(newPwd.length<6 || newPwd2.length<6)
+        {
+            layer.alert("密码不能少于6位",{
+                skin: 'layui-layer-molv'
+            });
+            return false;
+        }
+        if(newPwd!=newPwd2)
+        {
+            layer.alert("密码与确认密码不同",{
+                skin: 'layui-layer-molv'
+            });
+            return false;
+        }
+        if(email.length!=4)
+        {
+            layer.alert("验证码是4位哦",{
+                skin: 'layui-layer-molv'
+            });
+            return false;
+        }
+        $.ajax({
+            type: "post",
+            url: "/admin/soft/suChangePWD",
+            dataType: 'json',
+            data: 'sid={$soft.id}&username='+username+"&newPwd="+newPwd+"&newPwd2="+newPwd2+"&code="+email,
+            success: function (json) {
+
+                layer.alert(json.msg,{
+                    skin: 'layui-layer-molv'
+                });
+            },
+            error:function(result) {
+                layer.alert(result,{
+                    skin: 'layui-layer-molv'
+                });
+            }
+        });
+        return false;
+    }
+</script>

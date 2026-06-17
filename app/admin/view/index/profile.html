@@ -1,0 +1,542 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif !important;
+    background: radial-gradient(circle at 80% 20%, #0c1830, #030712) !important;
+    color: #f8fafc !important;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.wrapper-content {
+    padding: 30px !important;
+}
+
+.dex-layout {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Hero Title Styles */
+.hero-left {
+    padding-right: 20px;
+    margin-bottom: 30px;
+}
+
+.badge-glow {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #34d399;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.pulse-dot {
+    height: 8px;
+    width: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    box-shadow: 0 0 8px #10b981;
+    animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.hero-title {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    color: #ffffff !important;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #00ff88, #38bdf8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-desc {
+    color: #94a3b8;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 35px;
+    max-width: 550px;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+@media (max-width: 767px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.stat-card {
+    background: rgba(17, 24, 39, 0.55);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 4px;
+}
+
+.stat-card:nth-child(even) .stat-value {
+    color: #00ff88;
+}
+
+.stat-label {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Token Badges */
+.token-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.token-pill {
+    background: rgba(30, 41, 59, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.token-pill.active {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: rgba(0, 255, 136, 0.25);
+    color: #00ff88;
+}
+
+/* Swap Box (DEX swap style profile card) */
+.swap-box {
+    background: rgba(17, 24, 39, 0.65) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.swap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.swap-header i {
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.swap-header i:hover {
+    color: #ffffff;
+}
+
+.input-block {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.input-label {
+    display: flex;
+    justify-content: space-between;
+    color: #94a3b8;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.img-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid rgba(56, 189, 248, 0.4);
+}
+
+.username-display {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.secret-key-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.secret-key-display i {
+    color: #38bdf8;
+    font-size: 16px;
+}
+
+.secret-key-display span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: #f8fafc;
+    word-break: break-all;
+}
+
+.reset-link {
+    color: #38bdf8 !important;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.reset-link:hover {
+    color: #00d4ff !important;
+    text-decoration: underline;
+}
+
+/* Arrow divider */
+.arrow-divider {
+    display: flex;
+    justify-content: center;
+    margin: -10px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.circle-btn {
+    background: #1e293b;
+    border: 4px solid #0f172a;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Rate details Info */
+.rate-info {
+    margin: 16px 0 24px 0;
+    padding: 0 8px;
+}
+
+.rate-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+}
+
+.rate-row span:last-child {
+    color: #f8fafc;
+    font-weight: 500;
+}
+
+/* Swap Actions */
+.swap-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-swap-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+    border: none !important;
+    border-radius: 12px;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px;
+    width: 100%;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.btn-swap-primary:hover {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.btn-swap-secondary {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px;
+    color: #cbd5e1;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-swap-secondary:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff;
+}
+
+/* Logs and Tabs Section */
+.logs-panel {
+    background: rgba(17, 24, 39, 0.55);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-title i {
+    color: #38bdf8;
+}
+
+.panel-body {
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Feed List */
+.feed-element {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 16px 0;
+}
+
+.feed-element:last-child {
+    border-bottom: none;
+}
+
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.feed-time {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.feed-badge {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+.feed-msg {
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Tables */
+.table {
+    color: #cbd5e1 !important;
+    margin-bottom: 0;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.01) !important;
+}
+
+.table > tbody > tr > td, .table > thead > tr > th {
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 12px 16px !important;
+    font-size: 14px;
+}
+
+.table > thead > tr > th {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.08) !important;
+    color: #f8fafc !important;
+    font-weight: 600;
+}
+
+.table a {
+    color: #38bdf8 !important;
+    text-decoration: none;
+}
+
+.table a:hover {
+    text-decoration: underline;
+}
+
+.empty-state {
+    padding: 30px;
+    text-align: center;
+    color: #64748b;
+    font-size: 14px;
+}
+@media (max-width: 991px) {
+    .hero-left {
+        text-align: center;
+        padding-right: 0;
+    }
+    .hero-desc {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .token-badges {
+        justify-content: center;
+    }
+}
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="dex-layout">
+        <!-- Top Hero Section (Full width) -->
+        <div class="row" style="margin-bottom: 30px;">
+            <div class="col-md-12">
+                <div class="hero-left" style="padding-right: 0; margin-bottom: 0;">
+                    <div class="badge-glow">
+                        <span class="pulse-dot"></span> ⚡ 系统状态实时监控中
+                    </div>
+                    <h1 class="hero-title">WOODLL 网络验证 <br><span class="gradient-text">后台控制中心</span></h1>
+                    <p class="hero-desc" style="max-width: 800px;">安全、稳定、高效的云端网络验证管理中心。实时掌握软件授权状态、在线用户动态及最新的系统安全日志，为您的软件业务保驾护航。</p>
+                    <div class="token-badges">
+                        <span class="token-pill"><i class="fa fa-shield"></i> 接口盾</span>
+                        <span class="token-pill"><i class="fa fa-bolt"></i> 极速响应</span>
+                        <span class="token-pill"><i class="fa fa-code"></i> API 接口</span>
+                        <span class="token-pill"><i class="fa fa-database"></i> 强力安全</span>
+                        <span class="token-pill active"><i class="fa fa-check-circle"></i> 状态正常</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Workspace Row (Grid) -->
+        <div class="row">
+            <!-- Workspace Content (col-lg-12 full-width) -->
+            <div class="col-lg-12 col-md-12" style="margin-bottom: 30px;">
+                <!-- Stats Grid (aligned to 4 columns horizontally on desktop) -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value">{$softTotal}</span>
+                        <span class="stat-label">活跃软件数</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{$userTotal}</span>
+                        <span class="stat-label">总注册用户</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{$onlineTotal}</span>
+                        <span class="stat-label">实时在线数</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{$timeoutTotal}</span>
+                        <span class="stat-label">过期用户数</span>
+                    </div>
+                </div>
+
+                <!-- Logs Panel -->
+                <div class="logs-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i class="fa fa-list-alt"></i> 管理员登录日志
+                        </div>
+                    </div>
+                    
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>登录时间</th>
+                                    <th>登录 IP</th>
+                                    <th>物理归属地</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {volist name="location" id="vo"}
+                                <tr>
+                                    <td>{$vo.login_time}</td>
+                                    <td><a href="https://www.ip138.com/ips138.asp?ip={$vo.ip}&action=2" target="_blank"><i class="fa fa-map-marker"></i> {$vo.ip}</a></td>
+                                    <td>{$vo.location}</td>
+                                </tr>
+                                {/volist}
+                                {if empty($location)}
+                                <tr>
+                                    <td colspan="3" class="text-center empty-state">暂无登录日志</td>
+                                </tr>
+                                {/if}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

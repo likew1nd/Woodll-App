@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOODLL 网络验证 - 安装成功</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/font-awesome-4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/install.css">
+</head>
+<body>
+    <div class="install-wrapper">
+        <!-- Brand Header -->
+        <div class="brand-header animate-fade-in">
+            <div class="logo-circle">
+                <i class="fa fa-shield"></i>
+            </div>
+            <h1 class="brand-title">WOODLL <span>网络验证系统</span></h1>
+            <p class="brand-subtitle">安装向导 · Premium Installation Wizard</p>
+        </div>
+
+        <!-- Stepper -->
+        <div class="stepper animate-slide-up">
+            <div class="step completed">
+                <span class="step-num">1</span>
+                <span class="step-label">使用协议</span>
+            </div>
+            <div class="step-line completed"></div>
+            <div class="step completed">
+                <span class="step-num">2</span>
+                <span class="step-label">环境检测</span>
+            </div>
+            <div class="step-line completed"></div>
+            <div class="step completed">
+                <span class="step-num">3</span>
+                <span class="step-label">创建数据</span>
+            </div>
+            <div class="step-line completed"></div>
+            <div class="step completed">
+                <span class="step-num">4</span>
+                <span class="step-label">安装完成</span>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="install-card animate-scale-up">
+            <div class="success-banner">
+                <div class="success-icon">
+                    <i class="fa fa-check"></i>
+                </div>
+                <h2 class="success-title">恭喜您，系统安装成功！</h2>
+                <p style="color: var(--text-secondary); max-width: 500px; line-height: 1.6;">
+                    WOODLL 网络验证系统已成功配置完成，数据库表结构和管理员账号创建完毕。请仔细阅读以下最终协议以开始使用：
+                </p>
+            </div>
+            
+            <div class="agreement-box" style="height: 200px;">
+                <h3>最终使用许可协议</h3>
+                <p>1. 本网络验证系统严禁用于任何非法软件授权验证或违规违法程序管理，否则因此导致的一切法律责任由部署和运营方承担。</p>
+                <p>2. 请在完成安装后，<span class="highlight-red">立即删除</span> 服务器上的 `public/install/index.php` 等安装脚本文件，防止被二次恶意覆盖安装。</p>
+                <p>3. 系统管理员后台入口为：<span class="highlight-cyan">网站根目录</span>，请直接访问根目录登录并第一时间修改默认配置。</p>
+            </div>
+
+            <div class="actions">
+                <a class="btn-woodll btn-secondary" href="./sc.php">
+                    <i class="fa fa-times"></i> 拒绝并清理
+                </a>
+                <a class="btn-woodll btn-primary" href="/">
+                    同意条款并进入管理后台 <i class="fa fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

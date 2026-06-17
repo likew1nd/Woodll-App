@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>修改资料</title>
+    <link rel="stylesheet" href="__ADMIN__/css/font-awesome.min.css?v=4.4.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b0f19;
+            color: #cbd5e1;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .settings-container {
+            padding: 24px;
+            box-sizing: border-box;
+        }
+        
+        /* Avatar Section */
+        .avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        .avatar-wrapper {
+            position: relative;
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+            background-color: #111827;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .avatar-wrapper:hover {
+            border-color: #38bdf8;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+            transform: scale(1.03);
+        }
+        
+        .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.75);
+            color: #38bdf8;
+            font-size: 11px;
+            text-align: center;
+            padding: 4px 0;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .avatar-wrapper:hover .avatar-overlay {
+            opacity: 1;
+            background: rgba(14, 165, 233, 0.85);
+            color: #ffffff;
+        }
+        
+        .upload-status {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 8px;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        /* Section Title Divider */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            gap: 10px;
+        }
+        
+        .section-divider::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+        
+        .section-divider i {
+            color: #38bdf8;
+        }
+        
+        /* Form Styling */
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .control-label {
+            width: 70px;
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 13px;
+            text-align: right;
+            margin-right: 12px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        
+        .input-wrapper {
+            flex-grow: 1;
+        }
+        
+        .form-control {
+            width: 100%;
+            background-color: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 13px;
+            height: 36px;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #38bdf8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.18);
+        }
+        
+        /* Buttons Block */
+        .action-block {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+        }
+        
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.3);
+        }
+        
+        .btn-cancel {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+        }
+        
+        .btn-cancel:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <!-- Avatar Section -->
+        <div class="avatar-section">
+            <div class="avatar-wrapper" id="avatarWrapper">
+                <img id="avatarPreview" src="{$user.avatar}" alt="用户头像">
+                <div class="avatar-overlay">
+                    <i class="fa fa-camera"></i> 更换头像
+                </div>
+            </div>
+            <span id="uploadStatus" class="upload-status">点击上方头像更换本地头像</span>
+            <input type="file" id="avatarFileInput" accept="image/*" style="display: none;">
+        </div>
+        
+        <!-- Divider -->
+        <div class="section-divider">
+            <i class="fa fa-lock"></i> 修改密码
+        </div>
+        
+        <!-- Password Form -->
+        <form id="changePwdForm">
+            <div class="form-group">
+                <label class="control-label">旧密码：</label>
+                <div class="input-wrapper">
+                    <input type="password" placeholder="请输入当前密码" class="form-control" name="oldPwd" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">新密码：</label>
+                <div class="input-wrapper">
+                    <input type="password" placeholder="请输入新密码（至少6位）" class="form-control" name="newPwd" id="field" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">确认密码：</label>
+                <div class="input-wrapper">
+                    <input type="password" placeholder="请再次输入新密码" class="form-control" name="newPwd2" required>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="action-block">
+                <button class="btn btn-submit" type="submit">保存修改</button>
+                <button class="btn btn-cancel" type="button" onclick="closeP()">取消</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="__ADMIN__/js/jquery.min.js?v=2.1.4"></script>
+    <script>
+        function closeP() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        }
+
+        $(document).ready(function() {
+            // Avatar Upload trigger
+            $('#avatarWrapper').on('click', function() {
+                $('#avatarFileInput').trigger('click');
+            });
+
+            $('#avatarFileInput').on('change', function() {
+                var file = this.files[0];
+                if (!file) return;
+
+                if (!file.type.match('image.*')) {
+                    parent.layer.msg('只能上传图片文件！', {icon: 5});
+                    return;
+                }
+
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#avatarPreview').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+
+                var formData = new FormData();
+                formData.append('__avatar1', file);
+
+                $('#uploadStatus').text('正在上传...').css('color', '#38bdf8');
+
+                $.ajax({
+                    url: '/admin/index/Update_avatar.html',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        if (res.success) {
+                            $('#uploadStatus').text('头像上传成功！').css('color', '#10b981');
+                            parent.layer.msg('头像更新成功！', {icon: 1, time: 1000});
+                            
+                            // Dynamically update the main layout avatars
+                            if (parent && parent.document) {
+                                var mainAvatar = parent.document.querySelector('.img-avatar');
+                                if (mainAvatar) mainAvatar.src = res.avatarUrls[0];
+                                
+                                var circleAvatar = parent.document.querySelector('.img-circle');
+                                if (circleAvatar) circleAvatar.src = res.avatarUrls[0];
+                            }
+                        } else {
+                            $('#uploadStatus').text('上传失败，请重试').css('color', '#ef4444');
+                            parent.layer.msg('上传失败: ' + res.msg, {icon: 5});
+                        }
+                    },
+                    error: function() {
+                        $('#uploadStatus').text('连接服务器失败').css('color', '#ef4444');
+                        parent.layer.msg('连接服务器出错，请稍后重试', {icon: 5});
+                    }
+                });
+            });
+
+            // Password Modification Submit
+            $('#changePwdForm').on('submit', function(e) {
+                e.preventDefault();
+                var oldPwd = $('input[name="oldPwd"]').val();
+                var newPwd = $('input[name="newPwd"]').val();
+                var newPwd2 = $('input[name="newPwd2"]').val();
+
+                if (newPwd.length < 6) {
+                    parent.layer.msg('新密码长度不能少于6位！', {icon: 5});
+                    return;
+                }
+
+                if (newPwd !== newPwd2) {
+                    parent.layer.msg('两次输入的新密码不一致！', {icon: 5});
+                    return;
+                }
+
+                $.ajax({
+                    url: "{:url('admin/user/changePwd')}",
+                    type: 'POST',
+                    data: {
+                        oldPwd: oldPwd,
+                        newPwd: newPwd,
+                        newPwd2: newPwd2
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (res.code == 0) {
+                            parent.layer.msg(res.msg || '密码修改成功，请重新登录！', {
+                                icon: 1, 
+                                time: 1500
+                            }, function() {
+                                // Logout parent page and redirect to login page
+                                if (parent) {
+                                    parent.window.location.href = "{:url('admin/index/logout')}";
+                                } else {
+                                    window.location.href = "{:url('admin/index/logout')}";
+                                }
+                            });
+                        } else {
+                            parent.layer.msg(res.msg || '修改失败，请重试！', {icon: 5});
+                        }
+                    },
+                    error: function() {
+                        parent.layer.msg('网络连接出错，请稍后再试！', {icon: 5});
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

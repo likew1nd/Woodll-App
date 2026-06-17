@@ -1,0 +1,253 @@
+<link href="__ADMIN__/css/plugins/colorpicker/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+<link href="__ADMIN__/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+<body class="gray-bg  mini-navbar pace-done">
+
+<div class="ibox-content modal-form-shell">
+    <form class="form-horizontal" id="addCard">
+        <div class="form-horizontal modal-form-body">
+            <div class="col-sm-12" style="padding-left: 0px;">
+                <div class="form-group">
+                    <label class="col-xs-2 col-sm-2 control-label">所属软件</label>
+
+                    <div class="col-xs-10 col-sm-10">
+                        <select class="form-control m-b selectpicker" name="sid" id="sid" data-live-search="true"
+                                data-live-search-placeholder="搜索" data-style="btn-white" data-container="body">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 col-sm-2 control-label">卡类型</label>
+
+                    <div class="col-xs-10 col-sm-10">
+                        <select class="form-control m-b selectpicker" name="typeId" id="type" data-live-search="true"
+                                data-live-search-placeholder="搜索" data-style="btn-white" data-container="body">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 col-sm-2 control-label">自定义头</label>
+                    <div class="col-xs-10 col-sm-10">
+                        <input type="text" class="form-control" name="cardHead" value="" placeholder="自定义卡号头，长度小于等于4个字母或数字如：1-xx(选填，无可以不填)">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-2 col-sm-2 control-label">数量</label>
+                    <div class="col-xs-10 col-sm-10">
+                        <input type="text" class="form-control" name="cardNum" value="" placeholder="生成多少张卡密">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-2 col-sm-2 control-label">备注</label>
+
+                    <div class="col-xs-10 col-sm-10">
+                        <textarea class="form-control" rows="3" placeholder="请输入内容"
+                                  name="remark"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 modal-form-footer">
+            <div class="col-xs-offset-5 col-sm-offset-5">
+                <button class="btn btn-sm btn-white" type="submit">{$sbName}</button>
+                &nbsp;&nbsp;
+                <button class="btn btn-sm btn-white" type="button" onclick="closeP()">{$cnName}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__ADMIN__/js/plugins/layer/laydate/laydate.js"></script>
+<link href="__ADMIN__/css/bootstrap-select.min.css" rel="stylesheet"/>
+<script src="__ADMIN__/js/bootstrap-select.min.js"></script>
+<script src="__ADMIN__/js/i18n/defaults-zh_CN.min.js"></script>
+<script>
+    $.fn.selectpicker.Constructor.DEFAULTS.size = 5;
+    function closeP() {
+        //关闭iframe页面
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.close(index);
+    }
+    //jquery加载后执行的
+    (function ($) {
+        //ajax获取用户所有软件数据
+        $.ajax({
+            type: 'get',
+            url: '/admin/soft/getSoftListsimple.html',
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                //请求成功
+                if (data.code < 0) {
+                    showToast(data.msg, 'error');
+                } else {
+                    var $sid = $("#sid");
+                    $sid.html("");
+                    if(data.total<=0)$sid.append($("<option value=''>请先添加软件</option>"));
+                    for (var i = 0; i < data.total; i++) {
+                        var pack = data.rows[i].name;
+                        $sid.append($("<option value='" + data.rows[i].id + "'>" + pack + "</option>"));
+                    }
+                    $sid.selectpicker();
+                    if (data.total > 0) {
+                        $sid.val(String(data.rows[0].id));
+                        $sid.selectpicker('val', String(data.rows[0].id));
+                    }
+                    $sid.selectpicker("refresh");
+                    loadType();
+                }
+            },
+            error: function () {
+                // view("异常！");
+                showToast("网络错误！", 'error');
+            }
+        });
+        //表单验证
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        $("#addCard").validate({
+            rules: {
+                cardNum: {
+                    required: true,
+                    minlength: 1,
+                    maxlength: 4,
+                    max:{$onceMax},
+                    digits:true
+                },
+                cardHead: {
+                    maxlength:4,
+                    chrnum:true
+                }
+            },
+            messages: {
+                cardNum:{
+                    digits:"必须输入整数",
+                    max:"每个软件单次最多添加{$onceMax}张卡密",
+                }
+            },
+            submitHandler: function (form) {
+
+                if ($("#sid").val() == '' || $("#sid").val() == null) {
+                    showToast('所属软件必须选择', 'error');
+                    return false;
+                }
+                var formParam = $("#addCard").serialize();
+                var formParam = formParam + "&" + "sname=" + getSelectedText("sid");
+                //ajax提交更新用户数据
+                $.ajax({
+                    type: 'post',
+                    url: '/admin/card/userAddCard.html',
+                    data: formParam,
+                    cache: false,
+                    dataType: 'json',
+                    success: function (data) {
+                        //请求成功
+                        if (data.code < 0) {
+                            showToast(data.msg, 'error');
+                        } else {
+                            parent.layer.open({
+                                title: '添加成功',
+                                content: data.keys,
+                                btn: ['知道啦'],
+                                yes: function (idx) {
+                                    parent.layer.close(idx);
+                                    try {
+                                    if (window.parent && window.parent.$ && window.parent.$('.J_iframe:visible').length > 0) {
+                                        var ciframe = window.parent.$('.J_iframe:visible')[0].contentWindow;
+                                        if (ciframe.reload) { ciframe.reload(); } else { ciframe.location.reload(); }
+                                    } else if (window.parent && window.parent.reload && typeof window.parent.reload === 'function') {
+                                        window.parent.reload();
+                                    }
+                                } catch (e) {}
+                                    var frameIdx = parent.layer.getFrameIndex(window.name);
+                                    if (frameIdx) parent.layer.close(frameIdx);
+                                }
+                            });
+
+                        }
+                    },
+                    error: function () {
+                        // view("异常！");
+                        showToast("网络错误！", "error");
+                    }
+                });
+            }
+        });
+    })(jQuery);
+    function getSelectedText(name) {
+        var obj = document.getElementById(name);
+        for (i = 0; i < obj.length; i++) {
+            if (obj[i].selected == true) {
+                return obj[i].innerText; //关键是通过option对象的innerText属性获取到选项文本
+            }
+        }
+    }
+    //选择软件后获取类型
+    $("#sid").change(function () {
+        loadType();
+    })
+    //加载卡密类型
+    function loadType()
+    {
+        var id = $("#sid").val();
+        $.ajax({
+            type: 'get',
+            url: '/admin/card/getCardTypeSimple.html?id=' + id,
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                //请求成功
+                if (data.code < 0) {
+                    showToast(data.msg, 'error');
+                } else {
+                    var $type = $("#type");
+                    $type.html("");//清空重置
+                    if (data.total == 0) {
+                        $type.append($("<option value=''>请先添加卡密类型</option>"));
+                        $type.selectpicker();
+                        $type.selectpicker("refresh");
+                        showToast("当前软件还没有添加卡密类型", 'error');
+                        return false;
+                    }
+                    for (var i = 0; i < data.total; i++) {
+                        var pack = "";
+                        switch (data.rows[i].type) {
+                            case 0:
+                                pack = '点卡';
+                                break;
+                            case 1:
+                                pack = '分钟卡';
+                                break;
+                            case 2:
+                                pack = '小时卡';
+                                break;
+                            case 3:
+                                pack = '天卡';
+                                break;
+                            case 4:
+                                pack = '周卡';
+                                break;
+                            case 5:
+                                pack = '月卡';
+                                break;
+                            case 6:
+                                pack = '年卡';
+                                break;
+                            default :break;
+                        }
+                        pack='[面值]:'+data.rows[i].cardValue+pack;
+                        $type.append($("<option value='" + data.rows[i].id + "'>" + pack + "</option>"))
+                    }
+                    $type.selectpicker();
+                    if (data.total > 0) {
+                        $type.val(String(data.rows[0].id));
+                        $type.selectpicker('val', String(data.rows[0].id));
+                    }
+                    $type.selectpicker("refresh");
+                }
+            },
+            error: function () {
+                // view("异常！");
+                showToast("网络错误！", 'error');
+            }
+        });
+    }
+</script>

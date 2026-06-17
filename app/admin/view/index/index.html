@@ -1,0 +1,660 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif !important;
+    background: linear-gradient(135deg, #0f172a, #1e1b4b) !important;
+    color: #f8fafc !important;
+}
+
+/* ===== Lock all scroll on the main admin layout - iframe manages its own ===== */
+html, body {
+    overflow: hidden !important;
+    height: 100% !important;
+}
+
+#wrapper {
+    background: transparent !important;
+    overflow: hidden !important;
+    height: 100% !important;
+}
+
+#page-wrapper {
+    overflow: hidden !important;
+    padding: 0 !important;
+    background: #020617 !important;
+}
+
+#page-wrapper.gray-bg,
+body.gray-bg {
+    background: #020617 !important;
+}
+
+/* The content iframe area - fills remaining height after the tab bar */
+.J_mainContent, #content-main {
+    overflow: hidden !important;
+}
+
+/* Sidebar Navigation */
+.navbar-default {
+    background: rgba(15, 23, 42, 0.5) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.navbar-static-side {
+    background: rgba(15, 23, 42, 0.5) !important;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.nav-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Sidebar Menu Links */
+.nav > li {
+    margin: 4px 12px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    transition: all 0.3s ease !important;
+    border-left: 3px solid transparent !important;
+}
+
+.nav > li > a {
+    color: #cbd5e1 !important;
+    font-weight: 500 !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.nav > li > a i {
+    transition: transform 0.3s ease, color 0.3s ease !important;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+    background: rgba(56, 189, 248, 0.08) !important;
+    color: #38bdf8 !important;
+}
+
+.nav > li > a:hover i {
+    color: #38bdf8 !important;
+    transform: scale(1.1) rotate(3deg) !important;
+}
+
+.nav > li.active {
+    background: rgba(56, 189, 248, 0.08) !important;
+    border-left: 3px solid #38bdf8 !important;
+}
+
+.nav > li.active > a {
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
+}
+
+.nav > li.active > a i {
+    color: #38bdf8 !important;
+}
+
+/* Submenu / Second Level Links */
+.nav-second-level {
+    background: rgba(15, 23, 42, 0.2) !important;
+    padding: 4px 0 !important;
+}
+
+.nav-second-level li {
+    margin: 2px 0 2px 18px !important;
+    border-radius: 6px !important;
+    position: relative !important;
+    border-left: none !important;
+}
+
+.nav-second-level li::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 18px !important;
+    top: 50% !important;
+    width: 4px !important;
+    height: 4px !important;
+    background-color: rgba(148, 163, 184, 0.3) !important;
+    border-radius: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: all 0.3s ease !important;
+}
+
+.nav-second-level li:hover::before, .nav-second-level li.active::before {
+    background-color: #38bdf8 !important;
+    box-shadow: 0 0 6px #38bdf8 !important;
+    transform: translateY(-50%) scale(1.2) !important;
+}
+
+.nav-second-level li a {
+    padding: 8px 12px 8px 32px !important;
+    color: #94a3b8 !important;
+    font-size: 13px !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+}
+
+.nav-second-level li a:hover {
+    color: #38bdf8 !important;
+    background: rgba(56, 189, 248, 0.04) !important;
+    padding-left: 36px !important;
+}
+
+.nav-second-level li.active a {
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+}
+
+.arrow {
+    transition: transform 0.3s ease !important;
+}
+
+/* User avatar and profile element */
+.profile-element {
+    color: #cbd5e1 !important;
+}
+
+.profile-element strong {
+    color: #f8fafc !important;
+}
+
+/* Top Tab Bar & Navigation */
+.content-tabs {
+    position: relative !important;
+    height: 54px !important;
+    padding: 7px 10px !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background:
+        radial-gradient(circle at 16% 0%, rgba(56, 189, 248, .18), transparent 34%),
+        linear-gradient(180deg, rgba(15, 23, 42, .96), rgba(2, 6, 23, .92)) !important;
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(148, 163, 184, .14) !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), 0 14px 34px rgba(0, 0, 0, .32);
+    overflow: visible !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    line-height: normal !important;
+}
+
+.row.content-tabs {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.page-tabs-content {
+    background: transparent !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: max-content !important;
+    min-width: max-content !important;
+    height: 40px !important;
+    padding: 0 6px !important;
+    float: none !important;
+    white-space: nowrap !important;
+    position: relative !important;
+}
+
+.page-tabs a.active {
+    background:
+        linear-gradient(135deg, rgba(14, 165, 233, .95), rgba(99, 102, 241, .98) 54%, rgba(139, 92, 246, .96)) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(191, 219, 254, .34) !important;
+    box-shadow:
+        0 10px 24px rgba(79, 70, 229, .34),
+        inset 0 1px 0 rgba(255, 255, 255, .28);
+    transform: translateY(-1px);
+}
+
+.page-tabs a {
+    height: 34px !important;
+    line-height: 32px !important;
+    padding: 0 14px !important;
+    margin: 0 !important;
+    color: #b8c7dc !important;
+    border: 1px solid rgba(148, 163, 184, .14) !important;
+    border-radius: 999px !important;
+    background: linear-gradient(180deg, rgba(30, 41, 59, .76), rgba(15, 23, 42, .58)) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    letter-spacing: .01em;
+    white-space: nowrap;
+}
+
+.page-tabs a:hover {
+    background: linear-gradient(180deg, rgba(51, 65, 85, .84), rgba(30, 41, 59, .68)) !important;
+    border-color: rgba(56, 189, 248, .38) !important;
+    color: #f8fafc !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(8, 47, 73, .22), inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.page-tabs a i {
+    margin-left: 7px !important;
+    color: rgba(226, 232, 240, .62) !important;
+    transition: color .18s ease, transform .18s ease;
+}
+
+.page-tabs a i:hover {
+    color: #ffffff !important;
+    transform: scale(1.08);
+}
+
+/* Buttons on the tab bar */
+.roll-nav {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    width: auto !important;
+    height: 40px !important;
+    min-width: 42px !important;
+    line-height: 38px !important;
+    margin: 0 !important;
+    border: 1px solid rgba(148, 163, 184, .16) !important;
+    border-radius: 12px !important;
+    background: linear-gradient(180deg, rgba(30, 41, 59, .9), rgba(15, 23, 42, .82)) !important;
+    color: #c7d2fe !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07);
+    transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+    flex: 0 0 auto !important;
+}
+
+.roll-nav:hover {
+    background: linear-gradient(180deg, rgba(30, 64, 175, .42), rgba(15, 23, 42, .88)) !important;
+    border-color: rgba(56, 189, 248, .42) !important;
+    color: #f8fafc !important;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(14, 165, 233, .16), inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+
+nav.page-tabs {
+    height: 40px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: auto !important;
+    overflow: hidden !important;
+    border-radius: 14px !important;
+    background: rgba(2, 6, 23, .36) !important;
+    border: 1px solid rgba(148, 163, 184, .11) !important;
+}
+
+.content-tabs .btn-group.roll-nav {
+    position: relative !important;
+    width: auto !important;
+    min-width: 116px !important;
+    padding: 0 !important;
+    overflow: visible !important;
+}
+
+.content-tabs .J_tabClose {
+    height: 38px !important;
+    padding: 0 14px !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #dbeafe !important;
+    font-weight: 600 !important;
+}
+
+.roll-right.J_tabExit {
+    min-width: 76px !important;
+    padding: 0 14px !important;
+    background: linear-gradient(135deg, rgba(239, 68, 68, .24), rgba(127, 29, 29, .34)) !important;
+    color: #fecaca !important;
+    border: 1px solid rgba(248, 113, 113, .28) !important;
+}
+
+.roll-right.J_tabExit:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, .38), rgba(185, 28, 28, .44)) !important;
+    color: #ffffff !important;
+    border-color: rgba(252, 165, 165, .46) !important;
+}
+
+.roll-nav i.fa {
+    font-size: 14px !important;
+}
+
+.J_mainContent {
+    background: linear-gradient(135deg, #0f172a, #1e1b4b) !important;
+}
+
+/* Custom logo elements */
+.logo-element {
+    color: #818cf8 !important;
+    font-weight: 700;
+}
+
+/* Dropdown styling */
+.dropdown-menu {
+    background: rgba(30, 41, 59, 0.9) !important;
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-menu > li > a {
+    color: #cbd5e1 !important;
+    transition: all 0.3s;
+}
+
+.dropdown-menu > li > a:hover {
+    background: rgba(99, 102, 241, 0.2) !important;
+    color: #ffffff !important;
+}
+
+.dropdown-menu .divider {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Profile Header Animations & Glow */
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 12px rgba(56, 189, 248, 0.2); }
+    50% { box-shadow: 0 0 24px rgba(56, 189, 248, 0.45); }
+    100% { box-shadow: 0 0 12px rgba(56, 189, 248, 0.2); }
+}
+
+@keyframes shakePencil {
+    0%, 100% { transform: rotate(0deg); }
+    20%, 60% { transform: rotate(-12deg); }
+    40%, 80% { transform: rotate(12deg); }
+}
+
+@keyframes dotPulse {
+    0% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 10px #10b981; }
+    100% { transform: scale(0.9); opacity: 0.6; }
+}
+
+@keyframes slideDownHeader {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-element {
+    animation: slideDownHeader 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.avatar-container {
+    display: inline-block;
+    position: relative;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(0, 255, 136, 0.15));
+    animation: pulseGlow 3s infinite ease-in-out;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-container:hover {
+    background: linear-gradient(135deg, #38bdf8, #00ff88);
+    transform: scale(1.05) rotate(3deg);
+    animation: none;
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+}
+
+.avatar-container img {
+    display: block;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: #0f172a;
+    transition: all 0.4s ease;
+    object-fit: cover;
+}
+
+.username-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.online-indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #10b981;
+    animation: dotPulse 1.8s infinite;
+}
+
+.profile-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    color: #38bdf8 !important;
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none !important;
+    cursor: pointer;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.profile-edit-btn:hover {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(0, 255, 136, 0.05));
+    border-color: rgba(56, 189, 248, 0.6);
+    color: #ffffff !important;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(-1.5px);
+}
+
+.profile-edit-btn:hover i {
+    animation: shakePencil 0.6s ease-in-out;
+}
+
+.profile-edit-btn:active {
+    transform: translateY(0);
+}
+</style>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="nav-close"><i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header" style="padding:25px 25px 8px 25px">
+                    <div class="profile-element text-center">
+                        <span class="avatar-container">
+                            <img alt="image" src="{$user.avatar}"/>
+                        </span>
+                        <div>
+                            <div class="username-wrapper">
+                                <strong class="font-bold" style="color: #ffffff; font-size: 15px;">{$user.username}</strong>
+                                <span class="online-indicator" title="在线状态"></span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <a href="javascript:;" onclick="showChangeInfo()" class="profile-edit-btn">
+                                <i class="fa fa-edit"></i> 修改资料
+                            </a>
+                        </div>
+                    </div>
+                    <div class="logo-element">YY
+                    </div>
+                </li>
+                <!--数据看板-->
+                <li>
+                    <a class="J_menuItem" href="/profile.html">
+                        <i class="fa fa-dashboard"></i>
+                        <span class="nav-label">数据看板</span>
+                    </a>
+                </li>
+                
+                
+
+                <li style="display:none;">
+                    <a href="#">
+                        <i class="fa fa-home"></i>
+                        <span class="nav-label">API市场</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a class="J_menuItem" href="/index_v1.html" data-index="0">API市场</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="/index_v2.html">我的API</a>
+                        </li>
+                    </ul>
+                </li>
+                <!--软件管理-->
+                <li>
+                    <a href="#">
+                        <i class="fa fa-object-group"></i>
+                        <span class="nav-label">软件管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a class="J_menuItem" href="/soft_list.html?v=1.01" data-index="0">软件列表</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="/admin/Soft_User/softUsers.html?v=1.01">用户列表</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="/admin/Soft_User/suLoginRecord.html?v=1.01">登录记录</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="/admin/Soft_User/feedbackList.html?v=1.01">反馈信息</a>
+                        </li>
+                    </ul>
+                </li>
+                <!--卡密管理-->
+                <li>
+                    <a href="#">
+                        <i class="fa fa-sellsy"></i>
+                        <span class="nav-label">卡密管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a class="J_menuItem" href="/admin/card/cardTypeList.html?v=1.01">卡类列表</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="/admin/card/cardList.html?v=1.01">卡密列表</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="/admin/card/cardLogList.html?v=1.01">充值日志</a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                <!--防破管理-->
+                <li>
+                    <a href="#">
+                        <i class="fa fa-cloud-download"></i>
+                        <span class="nav-label">防破管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a class="J_menuItem" href="/admin/soft/variableList.html?v=1.01">远程变量</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="/admin/soft/FunctionList.html?v=1.01">远程代码</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="/admin/soft/ForwardUrlList.html?v=1.01">远程算法</a>
+                        </li>
+                    </ul>
+                </li>
+                <!--防破管理-->
+                <!--管理代理商-->
+                
+                <!--管理代理商-->
+                <!--管理代理商-->
+                
+                <!--管理代理商-->
+                <li>
+                    <a href="#">
+                        <i class="fa fa-book"></i>
+                        <span class="nav-label">帮助文档</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a class="J_menuItem" href="/admin/index/APIDOC.html">API文档</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+    <!--右侧部分开始-->
+    <a class="navbar-minimalize minimalize-styl-2 " href="#"></a><!--左侧手机模式必须要有这个样式-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row content-tabs">
+            <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+            </button>
+            <nav class="page-tabs J_menuTabs">
+                <div class="page-tabs-content">
+                    <a href="javascript:;" class="active J_menuTab" data-id="/profile.html">首页</a>
+                </div>
+            </nav>
+            <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+            </button>
+            <div class="btn-group roll-nav roll-right">
+                <button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+
+                </button>
+                <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                    <li class="J_tabShowActive"><a>定位当前选项卡</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="J_tabCloseAll"><a>关闭全部选项卡</a>
+                    </li>
+                    <li class="J_tabCloseOther"><a>关闭其他选项卡</a>
+                    </li>
+                </ul>
+            </div>
+            <a href="{:url('admin/index/logout')}" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
+        </div>
+        <div class="row J_mainContent" id="content-main">
+            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="/profile.html" frameborder="0"
+                    data-id="/profile.html" seamless></iframe>
+        </div>
+
+    </div>
+    <!--右侧部分结束-->
+    <!--登录部分-->
+    </div>
+
+<script>
+    function showChangeInfo() {
+        layer.open({
+            type: 2,
+            title: '修改资料',
+            shadeClose: true,
+            shade: false,
+            offset: '120px',
+            area: ['380px', '460px'],
+            content: ['/admin/user/changeInfo.html', 'no']
+        });
+    }
+</script>

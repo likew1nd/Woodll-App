@@ -1,0 +1,3123 @@
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+
+
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+    <!--360浏览器优先以webkit内核解析-->
+
+
+
+
+
+    <title>{$title}</title>
+
+    <meta name="keywords" content="{$keywords}" />
+
+
+
+    <link rel="shortcut icon" href="/static/admin/img/logo.png">
+    <link href="__ADMIN__/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+
+    <link href="__ADMIN__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+
+
+    <link href="__ADMIN__/css/animate.css" rel="stylesheet">
+
+    <link href="__ADMIN__/css/style.css?v=4.1.0" rel="stylesheet">
+
+    <script src="__ADMIN__/js/jquery.min.js?v=2.1.4"></script>
+    <link href="__ADMIN__/css/bootstrap-select.min.css" rel="stylesheet"/>
+    <script src="__ADMIN__/js/bootstrap-select.min.js"></script>
+    <script src="__ADMIN__/js/i18n/defaults-zh_CN.min.js"></script>
+
+
+
+    <!-- 全局js -->
+
+    <script src="__ADMIN__/js/hplus.js?v=4.1.1"></script>
+
+    <script src="__ADMIN__/js/bootstrap.min.js?v=3.3.6"></script>
+
+    <script src="__ADMIN__/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <script src="__ADMIN__/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <script src="__ADMIN__/js/plugins/layer/layer.min.js"></script>
+
+
+
+    <!-- jQuery Validation plugin javascript-->
+
+    <script src="__ADMIN__/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <script src="__ADMIN__/js/plugins/validate/messages_zh.min.js"></script>
+
+
+
+
+
+
+
+
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+
+
+        /* Global Reset & Typography */
+
+        html {
+
+            background: radial-gradient(circle at 80% 20%, #0c1830, #030712) !important;
+
+            min-height: 100%;
+
+        }
+
+        body {
+
+            font-family: 'Inter', sans-serif !important;
+
+            background: radial-gradient(circle at 80% 20%, #0c1830, #030712) !important;
+
+            color: #f8fafc !important;
+
+            min-height: 100vh;
+
+            /* overflow-y is set via JS only inside popup iframes, not on the main layout */
+
+        }
+
+
+
+        /* Fix white left border from col-sm-12 inside form-horizontal */
+        body .form-horizontal>.form-horizontal>.col-sm-12:first-child {
+
+            padding-left: 0 !important;
+
+        }
+
+        body .ibox-content>form>.form-horizontal>.col-sm-12:first-child {
+
+            padding-left: 0 !important;
+
+        }
+
+
+
+        /* Scrollbar customization */
+
+        ::-webkit-scrollbar {
+
+            width: 8px;
+
+            height: 8px;
+
+        }
+
+        ::-webkit-scrollbar-track {
+
+            background: #030712;
+
+        }
+
+        }
+
+        }
+
+        /* === Flexbox Table Layout to Prevent Pagination from Dropping === */
+        .bootstrap-table {
+            display: flex !important;
+            flex-direction: column !important;
+            /* Calculate height based on viewport minus top search bars (~130px) and bottom padding (~20px) */
+            height: calc(100vh - 150px) !important;
+        }
+
+        .bootstrap-table .fixed-table-toolbar {
+            flex: 0 0 auto !important;
+        }
+
+        .bootstrap-table .fixed-table-container {
+            flex: 1 1 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            height: auto !important; /* Override JS inline height */
+            padding-bottom: 0 !important; /* Override resetView inline padding */
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+            border-radius: 16px !important;
+            background: rgba(17, 24, 39, 0.45) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            overflow: hidden !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .bootstrap-table .fixed-table-header {
+            flex: 0 0 auto !important;
+        }
+
+        .bootstrap-table .fixed-table-body {
+            flex: 1 1 auto !important;
+            height: auto !important;
+            overflow: auto !important;
+        }
+
+        /* 分页区域在 .fixed-table-container 外部，需要独立背景和布局样式 */
+        .bootstrap-table .fixed-table-pagination {
+            padding: 12px 16px !important;
+            background: rgba(17, 24, 39, 0.45) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+            overflow: visible !important;
+            min-height: 54px !important;
+            display: block !important;
+            border-bottom-left-radius: 16px !important;
+            border-bottom-right-radius: 16px !important;
+            box-sizing: border-box !important;
+            flex: 0 0 auto !important;
+
+        }
+
+        /* bootstrap-table 用 float/pull 定位分页，必须保留并兼容 BS3/BS4/BS5 */
+        .bootstrap-table .fixed-table-pagination .pull-right,
+        .bootstrap-table .fixed-table-pagination .float-right {
+            float: right !important;
+        }
+
+        .bootstrap-table .fixed-table-pagination .pull-left,
+        .bootstrap-table .fixed-table-pagination .float-left {
+            float: left !important;
+        }
+
+
+        ::-webkit-scrollbar-thumb:hover {
+
+            background: #38bdf8;
+
+        }
+
+
+
+        /* Glassmorphism Containers */
+
+        .ibox,
+        .panel,
+        .well,
+        .jumbotron {
+
+            background: rgba(17, 24, 39, 0.6) !important;
+
+            backdrop-filter: blur(12px) !important;
+
+            -webkit-backdrop-filter: blur(12px) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+
+            border-radius: 16px !important;
+
+            color: #cbd5e1 !important;
+
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+
+            margin-bottom: 24px;
+
+        }
+
+
+
+        .ibox-title {
+
+            background: transparent !important;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            color: #ffffff !important;
+
+            padding: 16px 20px !important;
+
+        }
+
+
+
+        .ibox-content {
+
+            background: transparent !important;
+
+            border: none !important;
+
+            padding: 20px !important;
+
+            color: #cbd5e1 !important;
+
+        }
+
+
+
+        /* Titles */
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .ibox-title h5 {
+
+            color: #ffffff !important;
+
+            font-weight: 600 !important;
+
+        }
+
+
+
+        /* PREMIUM DARK-MODE TABLE THEME */
+
+        .bootstrap-table {
+
+            width: 100% !important;
+
+            margin-left: 0 !important;
+
+            margin-right: 0 !important;
+
+            overflow: visible !important;
+
+        }
+
+        .bootstrap-table .fixed-table-toolbar,
+        .bootstrap-table .fixed-table-pagination {
+
+            overflow: visible !important;
+
+        }
+
+        @media (max-width: 768px) {
+
+            .bootstrap-table {
+
+                width: 100% !important;
+
+                margin-left: 0 !important;
+
+                margin-right: 0 !important;
+
+            }
+
+        }
+
+
+        .bootstrap-table .fixed-table-pagination .pagination-info {
+
+            color: #94a3b8 !important;
+
+            font-size: 13px !important;
+
+            line-height: 34px !important;
+
+            display: inline-block !important;
+
+        }
+
+
+
+        /* 统一每页条数下拉框样式 */
+
+        .bootstrap-table .fixed-table-pagination .page-list {
+
+            color: #94a3b8 !important;
+
+            font-size: 13px !important;
+
+            display: inline-block !important;
+
+            margin-left: 8px !important;
+
+        }
+
+        .bootstrap-table .fixed-table-pagination .page-list .btn-group,
+
+        .bootstrap-table .fixed-table-pagination .page-list .dropup-select {
+
+            display: inline-block !important;
+
+            position: relative !important;
+
+        }
+
+        .bootstrap-table .fixed-table-pagination .page-list button {
+
+            background: rgba(255, 255, 255, 0.03) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+
+            color: #cbd5e1 !important;
+
+            border-radius: 8px !important;
+
+            padding: 4px 10px !important;
+
+            font-size: 13px !important;
+
+            cursor: pointer !important;
+
+            transition: all 0.3s !important;
+
+        }
+
+        .bootstrap-table .fixed-table-pagination .page-list button:hover {
+
+            background: rgba(255, 255, 255, 0.1) !important;
+
+            color: #ffffff !important;
+
+        }
+
+        .bootstrap-table .fixed-table-pagination .page-list .dropdown-menu {
+            background: rgba(15, 23, 42, 0.95) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+
+            backdrop-filter: blur(12px) !important;
+
+            border-radius: 8px !important;
+
+            min-width: 60px !important;
+
+            padding: 4px 0 !important;
+
+            position: absolute !important;
+
+            bottom: 100% !important;
+
+            left: 0 !important;
+
+            z-index: 99999 !important;
+        }
+
+        .bootstrap-table .fixed-table-pagination .page-list .dropdown-menu a,
+
+        .bootstrap-table .fixed-table-pagination .page-list .dropdown-menu .dropdown-item {
+
+            color: #cbd5e1 !important;
+
+            padding: 6px 12px !important;
+
+            display: block !important;
+
+            font-size: 13px !important;
+
+            text-decoration: none !important;
+
+        }
+
+        .bootstrap-table .fixed-table-pagination .page-list .dropdown-menu a:hover,
+
+        .bootstrap-table .fixed-table-pagination .page-list .dropdown-menu a.active,
+
+        .bootstrap-table .fixed-table-pagination .page-list .dropdown-menu .dropdown-item:hover,
+
+        .bootstrap-table .fixed-table-pagination .page-list .dropdown-menu .dropdown-item.active {
+
+            background: rgba(99, 102, 241, 0.15) !important;
+
+            color: #818cf8 !important;
+
+            text-decoration: none !important;
+
+        }
+
+
+
+
+
+        /* Remove all vertical table borders and separators entirely */
+
+        .table,
+        .table-bordered,
+
+        .table-bordered>tbody>tr>td,
+
+        .table-bordered>tfoot>tr>td,
+
+        .table-bordered>thead>tr>th,
+
+        .table-bordered>tbody>tr>th,
+
+        .table-bordered>tfoot>tr>th,
+
+        .bootstrap-table .fixed-table-container,
+
+        .bootstrap-table .fixed-table-container tbody td,
+
+        .fixed-table-container,
+
+        .fixed-table-container thead th,
+
+        .fixed-table-container tbody td,
+
+        .fixed-table-header {
+
+            border-left: none !important;
+
+            border-right: none !important;
+
+            border-top: none !important;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+
+        }
+
+
+
+        /* Align table header and body columns perfectly */
+
+
+
+        .fixed-table-header table,
+        .fixed-table-body table {
+
+            margin-bottom: 0 !important;
+
+        }
+
+
+
+
+
+        /* Header Cells styling */
+
+        .table>thead>tr>th,
+
+        .bootstrap-table .fixed-table-container thead th {
+
+            background: rgba(30, 41, 59, 0.6) !important;
+
+            border-bottom: 2px solid rgba(56, 189, 248, 0.2) !important;
+
+            color: #38bdf8 !important;
+
+            font-size: 13px !important;
+
+            font-weight: 600 !important;
+
+            text-transform: uppercase !important;
+
+            letter-spacing: 0.5px !important;
+
+            box-sizing: border-box !important;
+
+        }
+
+
+
+        .fixed-table-header {
+
+            height: auto !important;
+
+        }
+
+
+
+        .bootstrap-table .fixed-table-container thead th .th-inner {
+
+            padding: 14px 16px !important;
+
+            line-height: normal !important;
+
+            height: auto !important;
+
+        }
+
+
+
+
+
+        /* Data Cells styling */
+
+        .table>tbody>tr>td,
+
+        .bootstrap-table .fixed-table-container tbody td {
+
+            padding: 14px 16px !important;
+
+            vertical-align: middle !important;
+
+            color: #cbd5e1 !important;
+
+            font-size: 14px !important;
+
+            box-sizing: border-box !important;
+
+        }
+
+
+
+        /* Row animations */
+
+        .table tbody tr {
+
+            transition: background-color 0.2s ease !important;
+
+            background: transparent !important;
+
+        }
+
+
+
+        .table-striped>tbody>tr:nth-of-type(odd) {
+
+            background-color: rgba(255, 255, 255, 0.01) !important;
+
+        }
+
+
+
+        .table-hover>tbody>tr:hover {
+
+            background-color: rgba(99, 102, 241, 0.08) !important;
+
+        }
+
+
+
+
+
+
+
+        /* Table Selected Row Background */
+
+        .table-striped>tbody>tr.selected>td,
+
+        .table-hover>tbody>tr.selected:hover>td,
+
+        .table-hover>tbody>tr.selected>td,
+
+        .table>tbody>tr.selected>td,
+
+        .bootstrap-table .fixed-table-container tbody tr.selected td {
+
+            background-color: rgba(99, 102, 241, 0.2) !important;
+
+            color: #ffffff !important;
+
+        }
+
+
+
+        /* Bootstrap Table checkbox state and hitbox */
+
+        .bootstrap-table th.bs-checkbox,
+        .bootstrap-table td.bs-checkbox {
+
+            cursor: pointer !important;
+
+            text-align: center !important;
+
+            vertical-align: middle !important;
+
+        }
+
+        .bootstrap-table th.bs-checkbox .th-inner {
+
+            display: flex !important;
+
+            justify-content: center !important;
+
+            align-items: center !important;
+
+            min-height: 28px !important;
+
+            overflow: visible !important;
+
+        }
+
+        .bootstrap-table th.bs-checkbox input[name="btSelectAll"],
+        .bootstrap-table td.bs-checkbox input[name="btSelectItem"] {
+
+            width: 16px !important;
+
+            height: 16px !important;
+
+            margin: 0 auto !important;
+
+            display: block !important;
+
+            position: relative !important;
+
+            z-index: 2 !important;
+
+            opacity: 1 !important;
+
+            visibility: visible !important;
+
+            pointer-events: auto !important;
+
+            cursor: pointer !important;
+
+            accent-color: #38bdf8;
+
+        }
+
+        .bootstrap-table .bs-checkbox .fht-cell {
+
+            display: none !important;
+
+        }
+
+        .bootstrap-table th.bs-checkbox input[name="btSelectAll"] {
+
+            pointer-events: none !important;
+
+        }
+
+        /* Keep a single pager: Bootstrap Table already renders the main pagination. */
+        .custom-pager,
+        .soft-pager {
+
+            display: none !important;
+
+        }
+
+        .bootstrap-table .fixed-table-pagination .page-list {
+
+            position: relative !important;
+
+            overflow: visible !important;
+
+        }
+
+        .bootstrap-table .fixed-table-pagination .page-list .dropdown-menu,
+        .bootstrap-table .fixed-table-pagination .page-list.open .dropdown-menu,
+        .bootstrap-table .fixed-table-pagination .page-list .open>.dropdown-menu,
+        .bootstrap-table .fixed-table-pagination .page-list .btn-group.open .dropdown-menu,
+        .bootstrap-table .fixed-table-pagination .page-list .dropup .dropdown-menu,
+        .bootstrap-table .fixed-table-pagination .page-list .dropdown-menu.show {
+
+            top: auto !important;
+
+            bottom: calc(100% + 6px) !important;
+
+            left: 0 !important;
+
+            transform: none !important;
+
+            z-index: 999999 !important;
+
+        }
+
+
+
+        /* List-only spacing: do not resize the bootstrap-table wrapper itself. */
+        .bootstrap-table {
+
+            width: 100% !important;
+
+            margin-left: 0 !important;
+
+            margin-right: 0 !important;
+
+        }
+
+        .bootstrap-table .fixed-table-container {
+
+            width: auto !important;
+
+            margin-left: 24px !important;
+
+            margin-right: 24px !important;
+
+        }
+
+        .bootstrap-table .fixed-table-pagination:before,
+        .bootstrap-table .fixed-table-pagination:after {
+
+            content: " " !important;
+
+            display: table !important;
+
+        }
+
+        .bootstrap-table .fixed-table-pagination:after {
+
+            clear: both !important;
+
+        }
+
+        @media (max-width: 768px) {
+
+            .bootstrap-table .fixed-table-container,
+            .bootstrap-table .fixed-table-pagination {
+
+                margin-left: 12px !important;
+
+                margin-right: 12px !important;
+
+            }
+
+        }
+
+
+
+        /* Action Links inside Table Columns */
+        .table td a[onclick],
+
+        .table td a[onClick],
+
+        .table td a[href] {
+
+            display: inline-block !important;
+
+            padding: 6px 12px !important;
+
+            margin: 4px 6px !important;
+
+            border-radius: 8px !important;
+
+            font-size: 12px !important;
+
+            font-weight: 500 !important;
+
+            text-decoration: none !important;
+
+            transition: all 0.2s ease !important;
+
+            background: rgba(255, 255, 255, 0.04) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            color: #cbd5e1 !important;
+
+        }
+
+
+
+        /* Default / General links in tables */
+
+        .table td a {
+
+            color: #cbd5e1 !important;
+
+        }
+
+
+
+        /* Edit action links (Cyan/Blue neon badge) */
+
+        .table td a[onclick*="edit"],
+
+        .table td a[onClick*="edit"] {
+
+            color: #38bdf8 !important;
+
+            background: rgba(56, 189, 248, 0.1) !important;
+
+            border-color: rgba(56, 189, 248, 0.25) !important;
+
+        }
+
+        .table td a[onclick*="edit"]:hover,
+
+        .table td a[onClick*="edit"]:hover {
+
+            background: rgba(56, 189, 248, 0.2) !important;
+
+            color: #ffffff !important;
+
+            border-color: rgba(56, 189, 248, 0.45) !important;
+
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4) !important;
+
+            transform: translateY(-1px) !important;
+
+        }
+
+
+
+        /* Delete action links (Red neon badge) */
+
+        .table td a[onclick*="delete"],
+
+        .table td a[onClick*="delete"],
+
+        .table td a[onclick*="del"],
+
+        .table td a[onClick*="del"] {
+
+            color: #ef4444 !important;
+
+            background: rgba(239, 68, 68, 0.1) !important;
+
+            border-color: rgba(239, 68, 68, 0.25) !important;
+
+        }
+
+        .table td a[onclick*="delete"]:hover,
+
+        .table td a[onClick*="delete"]:hover,
+
+        .table td a[onclick*="del"]:hover,
+
+        .table td a[onClick*="del"]:hover {
+
+            background: rgba(239, 68, 68, 0.2) !important;
+
+            color: #ffffff !important;
+
+            border-color: rgba(239, 68, 68, 0.45) !important;
+
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4) !important;
+
+            transform: translateY(-1px) !important;
+
+        }
+
+
+
+        .table td a[onclick*="Status"],
+
+        .table td a[onClick*="Status"] {
+
+            color: #10b981 !important;
+
+            background: rgba(16, 185, 129, 0.1) !important;
+
+            border-color: rgba(16, 185, 129, 0.25) !important;
+
+        }
+
+        .table td a[onclick*="Status"]:hover,
+
+        .table td a[onClick*="Status"]:hover {
+
+            background: rgba(16, 185, 129, 0.2) !important;
+
+            color: #ffffff !important;
+
+            border-color: rgba(16, 185, 129, 0.45) !important;
+
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4) !important;
+
+            transform: translateY(-1px) !important;
+
+        }
+
+
+
+        /* Fallback for other action links */
+
+        .table td a[onclick]:hover,
+
+        .table td a[onClick]:hover,
+
+        .table td a[href]:hover {
+
+            background: rgba(99, 102, 241, 0.15) !important;
+
+            border-color: rgba(99, 102, 241, 0.3) !important;
+
+            color: #818cf8 !important;
+
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.4) !important;
+
+            transform: translateY(-1px) !important;
+
+        }
+
+
+
+        /* Form inputs & Controls */
+
+        .form-control,
+        input[type="text"],
+        input[type="password"],
+        select,
+        textarea {
+
+            background: rgba(15, 23, 42, 0.65) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            border-radius: 10px !important;
+
+            color: #ffffff !important;
+
+            padding: 8px 12px !important;
+
+            transition: all 0.3s !important;
+
+        }
+
+
+
+        .form-control:focus,
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus,
+        textarea:focus {
+
+            border-color: #38bdf8 !important;
+
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4) !important;
+
+            outline: none !important;
+
+        }
+
+
+
+        .form-control::placeholder {
+
+            color: #64748b !important;
+
+        }
+
+
+
+        /* Vertical alignment for forms */
+
+        body .form-horizontal .form-group {
+
+            display: flex !important;
+
+            align-items: center !important;
+
+            flex-wrap: wrap !important;
+
+        }
+
+
+
+        body .form-horizontal .control-label {
+
+            padding-top: 0 !important;
+
+            margin-bottom: 0 !important;
+
+            display: flex !important;
+
+            align-items: center !important;
+
+            justify-content: flex-end !important;
+
+        }
+
+
+
+        body .form-horizontal .form-group::before,
+
+        body .form-horizontal .form-group::after {
+
+            display: none !important;
+
+        }
+
+
+
+        body .form-group .m-b,
+
+        body .form-group .bootstrap-select {
+
+            margin-bottom: 0 !important;
+
+        }
+
+
+
+        body .ibox-content {
+
+            height: auto !important;
+
+        }
+
+
+
+
+
+        /* Dropdown select customization */
+
+        body .form-horizontal .bootstrap-select {
+            width: 100% !important;
+        }
+        body .form-inline .bootstrap-select {
+            width: 180px !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+        }
+
+
+
+        body .bootstrap-select.form-control {
+
+            border: none !important;
+
+            padding: 0 !important;
+
+            background: transparent !important;
+
+            height: auto !important;
+
+        }
+
+
+
+        body .bootstrap-select>.dropdown-toggle {
+
+            background: rgba(15, 23, 42, 0.65) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            color: #ffffff !important;
+
+            border-radius: 10px !important;
+
+            padding: 8px 12px !important;
+
+            height: 38px !important;
+
+            line-height: normal !important;
+
+            display: flex !important;
+
+            align-items: center !important;
+
+            justify-content: space-between !important;
+
+        }
+
+
+
+        body .bootstrap-select>.dropdown-toggle:hover,
+
+        body .bootstrap-select>.dropdown-toggle:focus {
+
+            border-color: #38bdf8 !important;
+
+            outline: none !important;
+
+        }
+
+
+
+        body .bootstrap-select .dropdown-menu {
+
+            background: rgba(17, 24, 39, 0.98) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            border-radius: 10px !important;
+
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+
+        }
+
+
+
+        body .bootstrap-select .dropdown-menu li a {
+
+            color: #cbd5e1 !important;
+
+            padding: 8px 16px !important;
+
+            transition: all 0.2s ease !important;
+
+        }
+
+
+
+        body .bootstrap-select .dropdown-menu li a:hover,
+
+        body .bootstrap-select .dropdown-menu li.active a,
+
+        body .bootstrap-select .dropdown-menu li.selected a {
+
+            background: rgba(99, 102, 241, 0.15) !important;
+
+            color: #818cf8 !important;
+
+        }
+
+
+
+        body .bootstrap-select .dropdown-menu .bs-searchbox input {
+
+            background: rgba(15, 23, 42, 0.8) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            color: #ffffff !important;
+
+            border-radius: 8px !important;
+
+        }
+
+
+
+        /* Custom checkbox / radio dark theme overrides */
+
+        body .checkbox label::before,
+
+        body .radio label::before {
+
+            background-color: rgba(15, 23, 42, 0.65) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            transition: all 0.2s ease !important;
+
+        }
+
+
+
+        body .checkbox label,
+
+        body .radio label {
+
+            color: #cbd5e1 !important;
+
+        }
+
+
+
+        body .radio-info input[type="radio"]:checked+label::before {
+
+            border-color: #38bdf8 !important;
+
+        }
+
+
+
+        body .radio-info input[type="radio"]:checked+label::after {
+
+            background-color: #38bdf8 !important;
+
+        }
+
+
+
+        body .checkbox-info input[type="checkbox"]:checked+label::before {
+
+            background-color: #38bdf8 !important;
+
+            border-color: #38bdf8 !important;
+
+        }
+
+
+
+        body .checkbox-info input[type="checkbox"]:checked+label::after {
+
+            color: #ffffff !important;
+
+        }
+
+
+
+
+
+        /* Buttons */
+
+        .btn-primary {
+
+            background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+
+            border: none !important;
+
+            color: #ffffff !important;
+
+            border-radius: 10px !important;
+
+            padding: 8px 16px !important;
+
+            font-weight: 600 !important;
+
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+
+            transition: all 0.3s !important;
+
+        }
+
+
+
+        .btn-primary:hover {
+
+            background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+
+            transform: translateY(-1px) !important;
+
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4) !important;
+
+        }
+
+
+
+        .btn-success {
+
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+
+            border: none !important;
+
+            color: #ffffff !important;
+
+            border-radius: 10px !important;
+
+            padding: 8px 16px !important;
+
+            font-weight: 600 !important;
+
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+
+            transition: all 0.3s !important;
+
+        }
+
+
+
+        .btn-success:hover {
+
+            background: linear-gradient(135deg, #059669, #047857) !important;
+
+            transform: translateY(-1px) !important;
+
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4) !important;
+
+        }
+
+
+
+        .btn-info {
+
+            background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+
+            border: none !important;
+
+            color: #ffffff !important;
+
+            border-radius: 10px !important;
+
+            padding: 8px 16px !important;
+
+            font-weight: 600 !important;
+
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3) !important;
+
+            transition: all 0.3s !important;
+
+        }
+
+
+
+        .btn-info:hover {
+
+            background: linear-gradient(135deg, #0891b2, #0e7490) !important;
+
+            transform: translateY(-1px) !important;
+
+            box-shadow: 0 6px 16px rgba(6, 182, 212, 0.4) !important;
+
+        }
+
+
+
+        .btn-danger {
+
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+
+            border: none !important;
+
+            color: #ffffff !important;
+
+            border-radius: 10px !important;
+
+            padding: 8px 16px !important;
+
+            font-weight: 600 !important;
+
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+
+            transition: all 0.3s !important;
+
+        }
+
+
+
+        .btn-danger:hover {
+
+            background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+
+            transform: translateY(-1px) !important;
+
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4) !important;
+
+        }
+
+
+
+        .btn-default,
+        .btn-white {
+
+            background: rgba(255, 255, 255, 0.05) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+
+            color: #cbd5e1 !important;
+
+            border-radius: 10px !important;
+
+            padding: 8px 16px !important;
+
+            font-weight: 600 !important;
+
+            transition: all 0.3s !important;
+
+        }
+
+
+
+        .btn-default:hover,
+        .btn-white:hover {
+
+            background: rgba(255, 255, 255, 0.1) !important;
+
+            color: #ffffff !important;
+
+        }
+
+
+
+        /* Pagination 样式 */
+
+        /* 仅对 ul 标签应用 flex — 外层 div.pagination 用 float (bootstrap-table 内部机制) */
+
+        .fixed-table-pagination ul.pagination {
+
+            display: flex !important;
+
+            gap: 4px !important;
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+            list-style: none !important;
+
+        }
+
+
+
+        /* 其他场合的 ul.pagination (不在 fixed-table-pagination 内) */
+
+        ul.pagination {
+
+            display: flex !important;
+
+            gap: 6px !important;
+
+            border-radius: 8px !important;
+
+            padding: 0 !important;
+
+            margin: 0 !important;
+
+            list-style: none !important;
+
+        }
+
+
+
+        ul.pagination>li,
+
+        ul.pagination>li.page-item {
+
+            display: list-item !important;
+
+            float: none !important;
+
+            margin: 0 !important;
+
+        }
+
+
+
+        ul.pagination>li>a,
+
+        ul.pagination>li>span,
+
+        ul.pagination>li.page-item>a.page-link,
+
+        ul.pagination>li.page-item>span.page-link {
+
+            background: rgba(255, 255, 255, 0.03) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+
+            color: #cbd5e1 !important;
+
+            padding: 6px 12px !important;
+
+            border-radius: 8px !important;
+
+            font-weight: 500 !important;
+
+            transition: all 0.2s ease !important;
+
+            float: none !important;
+
+            position: relative !important;
+
+            display: block !important;
+
+            line-height: 1.5 !important;
+
+            text-decoration: none !important;
+
+        }
+
+
+
+        ul.pagination>li>a:hover,
+
+        ul.pagination>li.page-item>a.page-link:hover {
+
+            background: rgba(99, 102, 241, 0.15) !important;
+
+            border-color: rgba(99, 102, 241, 0.3) !important;
+
+            color: #818cf8 !important;
+
+            transform: translateY(-1px) !important;
+
+            text-decoration: none !important;
+
+        }
+
+
+
+        ul.pagination>.active>a,
+
+        ul.pagination>.active>span,
+
+        ul.pagination>.active>a:hover,
+
+        ul.pagination>.active>span:hover,
+
+        ul.pagination>li.page-item.active>a.page-link,
+
+        ul.pagination>li.page-item.active>span.page-link {
+
+            background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+
+            border-color: transparent !important;
+
+            color: #ffffff !important;
+
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3) !important;
+
+        }
+
+
+
+        ul.pagination>.disabled>a,
+
+        ul.pagination>.disabled>span,
+
+        ul.pagination>li.page-item.disabled>a.page-link,
+
+        ul.pagination>li.page-item.disabled>span.page-link {
+
+            background: rgba(255, 255, 255, 0.01) !important;
+
+            border-color: rgba(255, 255, 255, 0.03) !important;
+
+            color: #4b5563 !important;
+
+            cursor: not-allowed !important;
+
+        }
+
+
+
+
+
+        /* Tabs */
+
+        .nav-tabs {
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+        }
+
+
+
+        .nav-tabs>li>a {
+
+            color: #94a3b8 !important;
+
+            border: none !important;
+
+            background: transparent !important;
+
+            padding: 10px 20px !important;
+
+            font-weight: 500 !important;
+
+            transition: all 0.3s !important;
+
+        }
+
+
+
+        .nav-tabs>li>a:hover {
+
+            color: #cbd5e1 !important;
+
+        }
+
+
+
+        .nav-tabs>li.active>a {
+
+            color: #38bdf8 !important;
+
+            border-bottom: 2px solid #38bdf8 !important;
+
+            background: transparent !important;
+
+        }
+
+
+
+        /* Alerts */
+
+        .alert {
+
+            background: rgba(30, 41, 59, 0.7) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+
+            border-radius: 12px !important;
+
+            color: #f8fafc !important;
+
+        }
+
+
+
+        /* Custom badges */
+
+        .badge {
+
+            border-radius: 4px;
+
+            padding: 4px 8px;
+
+            font-weight: 600;
+
+        }
+
+
+
+        .badge-primary {
+
+            background-color: rgba(99, 102, 241, 0.15) !important;
+
+            border: 1px solid rgba(99, 102, 241, 0.3) !important;
+
+            color: #818cf8 !important;
+
+        }
+
+
+
+        .badge-success {
+
+            background-color: rgba(16, 185, 129, 0.15) !important;
+
+            border: 1px solid rgba(16, 185, 129, 0.3) !important;
+
+            color: #34d399 !important;
+
+        }
+
+
+
+        .badge-danger {
+
+            background-color: rgba(239, 68, 68, 0.15) !important;
+
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+
+            color: #fca5a5 !important;
+
+        }
+
+
+
+        /* PREMIUM DARK-MODE LAYER MODAL THEME */
+
+        body .layui-layer {
+
+            background: rgba(17, 24, 39, 0.95) !important;
+
+            backdrop-filter: blur(12px) !important;
+
+            -webkit-backdrop-filter: blur(12px) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            border-radius: 12px !important;
+
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4) !important;
+
+            /* NOTE: Do NOT set overflow:hidden here - it breaks layer.js drag handle */
+
+            overflow: visible !important;
+
+        }
+
+
+
+        /* Inner iframe needs clipping instead */
+
+        body .layui-layer .layui-layer-content {
+
+            border-radius: 0 0 12px 12px !important;
+
+            overflow: hidden !important;
+
+        }
+
+
+
+        body .layui-layer-title {
+
+            background: rgba(30, 41, 59, 0.9) !important;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            color: #ffffff !important;
+
+            font-weight: 600 !important;
+
+            border-top-left-radius: 12px !important;
+
+            border-top-right-radius: 12px !important;
+
+            /* Problem 3: Ensure title is draggable */
+
+            cursor: move !important;
+
+            user-select: none !important;
+
+        }
+
+
+
+        /* Close button invert to match dark background */
+
+        body .layui-layer-setwin .layui-layer-close {
+
+            filter: invert(1) !important;
+
+            opacity: 0.7 !important;
+
+            transition: opacity 0.2s !important;
+
+        }
+
+        body .layui-layer-setwin .layui-layer-close:hover {
+
+            opacity: 1 !important;
+
+        }
+
+
+
+        /* Body content text color */
+
+        body .layui-layer-content {
+
+            color: #cbd5e1 !important;
+
+        }
+
+
+
+        /* Action button area styling */
+
+        body .layui-layer-btn {
+
+            border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+
+            background: transparent !important;
+
+            padding: 10px 15px 12px !important;
+
+        }
+
+        body .layui-layer-btn a {
+
+            height: auto !important;
+
+            line-height: normal !important;
+
+            padding: 8px 16px !important;
+
+            border-radius: 8px !important;
+
+            font-weight: 500 !important;
+
+            font-size: 13px !important;
+
+            transition: all 0.2s ease !important;
+
+            margin: 0 6px !important;
+
+        }
+
+        body .layui-layer-btn .layui-layer-btn0 {
+
+            background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+
+            border: none !important;
+
+            color: #ffffff !important;
+
+        }
+
+        body .layui-layer-btn .layui-layer-btn0:hover {
+
+            background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+
+        }
+
+        body .layui-layer-btn .layui-layer-btn1 {
+
+            background: rgba(255, 255, 255, 0.05) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+
+            color: #cbd5e1 !important;
+
+        }
+
+        body .layui-layer-btn .layui-layer-btn1:hover {
+
+            background: rgba(255, 255, 255, 0.1) !important;
+
+            color: #ffffff !important;
+
+        }
+
+
+
+        /* Problem 2: Fix bottom buttons - use sticky instead of fixed to prevent overlap */
+
+        body div[style*="fixed"][style*="bottom"] {
+
+            background: rgba(17, 24, 39, 0.95) !important;
+
+            backdrop-filter: blur(12px) !important;
+
+            -webkit-backdrop-filter: blur(12px) !important;
+
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            padding: 12px 0 !important;
+
+            /* Change from fixed to sticky so it doesn't overlap scrollable content */
+
+            position: sticky !important;
+
+            bottom: 0 !important;
+
+            left: 0 !important;
+
+            width: 100% !important;
+
+            margin: 0 !important;
+
+            display: flex !important;
+
+            justify-content: center !important;
+
+            align-items: center !important;
+
+            z-index: 100 !important;
+
+            margin-top: 12px !important;
+
+        }
+
+
+
+        body div[style*="fixed"][style*="bottom"] div {
+
+            margin-left: 0 !important;
+
+            left: 0 !important;
+
+            float: none !important;
+
+            display: flex !important;
+
+            justify-content: center !important;
+
+            gap: 12px !important;
+
+        }
+
+
+
+        /* Popup form pages add their own bottom clearance near the fixed action bar. */
+
+
+
+        /* ===== DARK MODE: Gray Background Override ===== */
+
+        body.gray-bg {
+
+            background: radial-gradient(circle at 80% 20%, #0c1830, #030712) !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: Panel Body ===== */
+
+        .panel-body {
+
+            background: transparent !important;
+
+            color: #cbd5e1 !important;
+
+            padding: 16px !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: Tabs Container ===== */
+
+        .tabs-container {
+
+            background: transparent !important;
+
+        }
+
+
+
+        .tabs-container .nav-tabs {
+
+            background: rgba(17, 24, 39, 0.5) !important;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            border-radius: 12px 12px 0 0 !important;
+
+            overflow: hidden !important;
+
+            padding: 0 8px !important;
+
+        }
+
+
+
+        .tabs-container .nav-tabs>li>a {
+
+            color: #64748b !important;
+
+            background: transparent !important;
+
+            border: none !important;
+
+            border-bottom: 2px solid transparent !important;
+
+            padding: 10px 18px !important;
+
+            font-weight: 500 !important;
+
+            transition: all 0.2s ease !important;
+
+            border-radius: 0 !important;
+
+            margin: 0 !important;
+
+        }
+
+
+
+        .tabs-container .nav-tabs>li>a:hover {
+
+            color: #cbd5e1 !important;
+
+            background: rgba(255, 255, 255, 0.04) !important;
+
+        }
+
+
+
+        .tabs-container .nav-tabs>li.active>a,
+
+        .tabs-container .nav-tabs>li.active>a:focus,
+
+        .tabs-container .nav-tabs>li.active>a:hover {
+
+            background: transparent !important;
+
+            color: #38bdf8 !important;
+
+            border-bottom: 2px solid #38bdf8 !important;
+
+            border-top: none !important;
+
+            border-left: none !important;
+
+            border-right: none !important;
+
+        }
+
+
+
+        .tabs-container .tab-content {
+
+            background: rgba(17, 24, 39, 0.4) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+
+            border-top: none !important;
+
+            border-radius: 0 0 12px 12px !important;
+
+            padding: 8px 0 !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: Input Group Spinner Buttons ===== */
+
+        .input-group-btn-vertical {
+
+            background: transparent !important;
+
+        }
+
+
+
+        .input-group-btn-vertical .btn,
+
+        .input-group-btn-vertical .btn-default {
+
+            background: rgba(30, 41, 59, 0.7) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            color: #94a3b8 !important;
+
+            padding: 3px 8px !important;
+
+            transition: all 0.2s !important;
+
+        }
+
+
+
+        .input-group-btn-vertical .btn:hover {
+
+            background: rgba(56, 189, 248, 0.12) !important;
+
+            color: #38bdf8 !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: Dividers ===== */
+
+        .hr-line-dashed {
+
+            border-top: 1px dashed rgba(255, 255, 255, 0.1) !important;
+
+            margin: 12px 0 !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: Summernote WYSIWYG Editor ===== */
+
+        .note-editor.note-frame {
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            border-radius: 10px !important;
+
+            overflow: hidden !important;
+
+        }
+
+
+
+        .note-editor .note-toolbar {
+
+            background: rgba(30, 41, 59, 0.9) !important;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            padding: 6px 8px !important;
+
+        }
+
+
+
+        .note-editor .note-toolbar .note-btn,
+
+        .note-editor .note-toolbar .btn {
+
+            background: rgba(255, 255, 255, 0.04) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            color: #94a3b8 !important;
+
+            border-radius: 6px !important;
+
+        }
+
+
+
+        .note-editor .note-toolbar .note-btn:hover,
+
+        .note-editor .note-toolbar .btn:hover {
+
+            background: rgba(56, 189, 248, 0.12) !important;
+
+            color: #38bdf8 !important;
+
+        }
+
+
+
+        .note-editor .note-editing-area .note-editable {
+
+            background: rgba(15, 23, 42, 0.75) !important;
+
+            color: #cbd5e1 !important;
+
+            min-height: 120px;
+
+        }
+
+
+
+        .note-editor .note-statusbar {
+
+            background: rgba(30, 41, 59, 0.8) !important;
+
+            border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: Dropdown in Toolbar ===== */
+
+        .note-editor .dropdown-menu,
+
+        .note-popover .dropdown-menu {
+
+            background: rgba(17, 24, 39, 0.98) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            border-radius: 10px !important;
+
+        }
+
+
+
+        .note-editor .dropdown-menu>li>a,
+
+        .note-popover .dropdown-menu>li>a {
+
+            color: #cbd5e1 !important;
+
+        }
+
+
+
+        .note-editor .dropdown-menu>li>a:hover,
+
+        .note-popover .dropdown-menu>li>a:hover {
+
+            background: rgba(99, 102, 241, 0.15) !important;
+
+            color: #818cf8 !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: Checkbox / Radio awesome-bootstrap-checkbox ===== */
+
+        .checkbox-info input[type="checkbox"]:checked+label::before,
+
+        .radio-info input[type="radio"]:checked+label::before {
+
+            border-color: #38bdf8 !important;
+
+            background: rgba(56, 189, 248, 0.1) !important;
+
+        }
+
+
+
+        .checkbox input[type="checkbox"]+label::before,
+
+        .radio input[type="radio"]+label::before {
+
+            background: rgba(15, 23, 42, 0.65) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: Input group general ===== */
+
+        .input-group .input-group-addon {
+
+            background: rgba(30, 41, 59, 0.7) !important;
+
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            color: #94a3b8 !important;
+
+            border-radius: 10px !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: strong / b tags in form ===== */
+
+        .panel-body strong,
+        .panel-body b {
+
+            color: #e2e8f0 !important;
+
+        }
+
+
+
+        /* ===== DARK MODE: ibox-content no-padding ===== */
+
+        .ibox-content.no-padding {
+
+            padding: 0 !important;
+
+            background: transparent !important;
+
+        }
+
+
+
+        /* ===== Unified Popup & Form Styles ===== */
+
+        html,
+        body {
+
+            overflow-x: hidden;
+
+            width: 100%;
+
+        }
+
+        .modal-form-shell {
+
+            width: 100% !important;
+
+            max-width: 100% !important;
+
+            height: auto !important;
+
+            min-height: 0 !important;
+
+            padding: 20px 20px 78px 20px !important;
+
+            box-sizing: border-box !important;
+
+        }
+
+        .modal-form-body {
+
+            height: auto !important;
+
+            overflow-y: visible !important;
+
+            overflow-x: hidden !important;
+
+            padding-bottom: 16px !important;
+
+        }
+
+        .modal-form-footer {
+
+            position: fixed !important;
+
+            left: 0 !important;
+
+            right: 0 !important;
+
+            bottom: 0 !important;
+
+            z-index: 20 !important;
+
+            padding: 16px 0 12px !important;
+
+            background: rgba(17, 24, 39, 0.95) !important;
+
+            backdrop-filter: blur(12px) !important;
+
+            -webkit-backdrop-filter: blur(12px) !important;
+
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+            text-align: center !important;
+
+        }
+
+        /* Force hidden form-group rows (e.g. ID fields) to stay invisible even when theme overrides display */
+
+        .form-group[style*="display:none"],
+
+        .form-group[style*="display: none"] {
+
+            display: none !important;
+
+            height: 0 !important;
+
+            overflow: hidden !important;
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+        }
+
+        /* Selectpicker dropdown same width as the button */
+
+        .bootstrap-select .dropdown-menu {
+
+            width: 100% !important;
+
+            min-width: 100% !important;
+
+            /* Ensure dropdown always appears above the fixed footer (z-index:20) */
+
+            z-index: 9999 !important;
+
+        }
+
+
+
+        /* Centered Footer Buttons Offset Correction */
+
+        .modal-form-footer [class*="col-sm-offset-"],
+
+        .modal-form-footer [class*="col-xs-offset-"],
+
+        .modal-form-footer [class*="col-md-offset-"] {
+
+            margin-left: 0 !important;
+
+            float: none !important;
+
+            display: inline-block !important;
+
+        }
+
+
+
+        /* Custom Bootstrap Table Loading State for Dark Theme */
+
+        .fixed-table-loading {
+
+            background: rgba(17, 24, 39, 0.7) !important;
+
+            backdrop-filter: blur(4px);
+
+            -webkit-backdrop-filter: blur(4px);
+
+            color: #cbd5e1 !important;
+
+            border-radius: 8px;
+
+            font-size: 0 !important;
+            /* Hide default text */
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            right: 0;
+
+            bottom: 0;
+
+            z-index: 100;
+
+        }
+
+
+
+        .fixed-table-loading::after {
+
+            content: '';
+
+            display: block;
+
+            width: 32px;
+
+            height: 32px;
+
+            border: 3px solid rgba(99, 102, 241, 0.3);
+
+            border-top-color: #818cf8;
+
+            border-radius: 50%;
+
+            animation: spin 1s linear infinite;
+
+            position: absolute;
+
+            top: 50%;
+
+            left: 50%;
+
+            margin-top: -16px;
+
+            margin-left: -16px;
+
+        }
+
+
+
+        @keyframes spin {
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+    </style>
+
+
+
+    <script class="alignment-fix">
+
+        $(function () {
+
+            // ── Overflow control: main page vs popup iframe ──
+
+            if (window.parent !== window) {
+
+                // Allow default scrolling inside iframes so that long forms and tables are accessible
+
+                document.documentElement.style.overflow = 'auto';
+
+                document.body.style.overflow = 'auto';
+
+                try {
+
+                    var iframes = window.parent.document.getElementsByTagName('iframe');
+
+                    for (var i = 0; i < iframes.length; i++) {
+
+                        if (iframes[i].contentWindow === window) {
+
+                            var isPopup = window.name && window.name.indexOf('layui-layer-iframe') === 0;
+
+                            if (isPopup) {
+
+                                iframes[i].setAttribute('scrolling', 'auto');
+
+                                iframes[i].style.overflow = 'auto';
+
+                            } else {
+
+                                iframes[i].setAttribute('scrolling', 'yes');
+
+                                iframes[i].style.overflow = 'auto';
+
+                            }
+
+                            break;
+
+                        }
+
+                    }
+
+                } catch (e) {
+
+                    console.error("Failed to configure scrollbar in parent iframe:", e);
+
+                }
+
+            } else {
+
+                // We are the main admin page - lock overflow to prevent stray scrollbar
+
+                document.documentElement.style.overflow = 'hidden';
+
+                document.body.style.overflow = 'hidden';
+
+            }
+
+
+
+            // ── Problem 4: Prevent duplicate parent.layer.open() popups ──
+
+            // Only patch in the TOP-LEVEL page (not inside iframes)
+
+            if (window.parent === window && typeof layer !== 'undefined') {
+
+                var _layerOpenOrig = layer.open;
+
+                var _activeLayersByUrl = {};
+
+
+
+                layer.open = function (options) {
+
+                    // Ensure popups (type 1 and type 2) are centered vertically and horizontally
+
+                    if (options) {
+
+                        if (options.type === 1 || options.type === 2) {
+
+                            options.offset = 'auto';
+
+
+
+                            // Automatically increase popup height by 150px
+
+                            if (options.area) {
+
+                                var area = options.area;
+
+                                if (Array.isArray(area) && area.length === 2) {
+
+                                    var height = area[1];
+
+                                    if (typeof height === 'string' && height.endsWith('px')) {
+
+                                        var hVal = parseInt(height, 10);
+
+                                        if (!isNaN(hVal)) {
+
+                                            area[1] = (hVal + 150) + 'px';
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    // Build a dedup key from the content URL (strip query params for edit vs add)
+
+                    var contentUrl = '';
+
+                    if (options && options.content) {
+
+                        contentUrl = Array.isArray(options.content)
+
+                            ? String(options.content[0])
+
+                            : String(options.content);
+
+
+
+                        // Only dedup if it looks like a real URL path (starts with / or http, short length)
+
+                        var isRealUrl = (contentUrl.charAt(0) === '/' || contentUrl.indexOf('http') === 0)
+
+                            && contentUrl.length < 300;
+
+
+
+                        if (isRealUrl) {
+
+                            var baseUrl = contentUrl.split('?')[0];
+
+
+
+                            if (_activeLayersByUrl[baseUrl] !== undefined) {
+
+                                // Modal already open - just bring it to focus, don't open another
+
+                                try {
+
+                                    var existingLayer = $('#layui-layer' + _activeLayersByUrl[baseUrl]);
+
+                                    if (existingLayer.length) {
+
+                                        existingLayer.css('z-index', layer.zIndex + 1);
+
+                                        layer.zIndex++;
+
+                                        return _activeLayersByUrl[baseUrl];
+
+                                    }
+
+                                } catch (e) { }
+
+                                // If element not found, clean up and let it open fresh
+
+                                delete _activeLayersByUrl[baseUrl];
+
+                            }
+
+
+
+                            // Wrap the 'end' callback to clean up our tracking
+
+                            var origEnd = options.end;
+
+                            options.end = function () {
+
+                                delete _activeLayersByUrl[baseUrl];
+
+                                if (typeof origEnd === 'function') origEnd.call(this);
+
+                            };
+
+
+
+                            // Open the layer and track its index by URL
+
+                            var layerIndex = _layerOpenOrig.call(layer, options);
+
+                            _activeLayersByUrl[baseUrl] = layerIndex;
+
+                            return layerIndex;
+
+                        }
+
+                    }
+
+
+
+                    // No content URL or non-URL content - open normally (e.g. confirm dialogs, card keys)
+
+                    return _layerOpenOrig.call(layer, options);
+
+
+
+                };
+
+            }
+
+
+
+            // ── Bootstrap table header alignment fix ──
+
+            var fixTableAlignTimer = null;
+
+            function fixTableAlign() {
+                var $tables = $('.bootstrap-table .fixed-table-body > table');
+                if ($tables.length > 0) {
+
+                    $tables.each(function () {
+
+                        var $t = $(this);
+
+                        if ($t.data('bootstrap.table')) {
+                            $t.bootstrapTable('resetView');
+
+                        }
+
+                    });
+
+                }
+
+            }
+
+
+
+            $(document).on('post-body.bs.table', function () {
+
+                clearTimeout(fixTableAlignTimer);
+                fixTableAlignTimer = setTimeout(fixTableAlign, 100);
+            });
+
+
+
+
+            $(window).on('load resize', function () {
+
+                clearTimeout(fixTableAlignTimer);
+                fixTableAlignTimer = setTimeout(fixTableAlign, 200);
+            });
+
+            // 翻页后自动滚回页面顶部，防止分页栏掉出可视区域
+            $(document).on('page-change.bs.table', function () {
+                window.scrollTo(0, 0);
+            });
+
+        });
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+
+<script>
+
+    /* ============================================================
+    
+       GLOBAL CYBERPUNK TOAST NOTIFICATION SYSTEM
+    
+       Usage: showToast(msg, type)
+    
+       type: 'success' | 'error' | 'warning' | 'info'
+    
+       可从子 iframe 调用: parent.showToast(msg, type)
+    
+       ============================================================ */
+
+    (function () {
+
+        // Inject toast CSS once
+
+        if (!document.getElementById('__cyber-toast-style__')) {
+
+            var s = document.createElement('style');
+
+            s.id = '__cyber-toast-style__';
+
+            s.innerHTML = [
+
+                '#__cyber-toast-container__ {',
+
+                '  position: fixed;',
+
+                '  top: 18px;',
+
+                '  right: 18px;',
+
+                '  z-index: 999999;',
+
+                '  display: flex;',
+
+                '  flex-direction: column;',
+
+                '  gap: 10px;',
+
+                '  pointer-events: none;',
+
+                '}',
+
+                '.__cyber-toast {',
+
+                '  min-width: 260px;',
+
+                '  max-width: 360px;',
+
+                '  padding: 13px 18px 13px 16px;',
+
+                '  border-radius: 12px;',
+
+                '  display: flex;',
+
+                '  align-items: center;',
+
+                '  gap: 11px;',
+
+                '  font-family: "Inter", sans-serif;',
+
+                '  font-size: 14px;',
+
+                '  font-weight: 500;',
+
+                '  color: #f1f5f9;',
+
+                '  letter-spacing: 0.2px;',
+
+                '  pointer-events: auto;',
+
+                '  backdrop-filter: blur(18px);',
+
+                '  -webkit-backdrop-filter: blur(18px);',
+
+                '  border: 1px solid rgba(255,255,255,0.07);',
+
+                '  box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.03);',
+
+                '  transform: translateX(110%);',
+
+                '  opacity: 0;',
+
+                '  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.35s ease;',
+
+                '  position: relative;',
+
+                '  overflow: hidden;',
+
+                '}',
+
+                '.__cyber-toast.show {',
+
+                '  transform: translateX(0);',
+
+                '  opacity: 1;',
+
+                '}',
+
+                '.__cyber-toast.hide {',
+
+                '  transform: translateX(110%);',
+
+                '  opacity: 0;',
+
+                '}',
+
+                '.__cyber-toast::before {',
+
+                '  content: "";',
+
+                '  position: absolute;',
+
+                '  left: 0; top: 0; bottom: 0;',
+
+                '  width: 3px;',
+
+                '  border-radius: 12px 0 0 12px;',
+
+                '}',
+
+                /* Progress bar */
+
+                '.__cyber-toast-bar {',
+
+                '  position: absolute;',
+
+                '  bottom: 0; left: 0;',
+
+                '  height: 2px;',
+
+                '  border-radius: 0 0 12px 12px;',
+
+                '  animation: __cyber-bar-shrink 3s linear forwards;',
+
+                '}',
+
+                '@keyframes __cyber-bar-shrink {',
+
+                '  from { width: 100%; }',
+
+                '  to   { width: 0%; }',
+
+                '}',
+
+                /* Success */
+
+                '.__cyber-toast--success {',
+
+                '  background: linear-gradient(135deg, rgba(16,24,48,0.55) 0%, rgba(10,30,50,0.55) 100%);',
+
+                '}',
+
+                '.__cyber-toast--success::before { background: #10b981; box-shadow: 0 0 10px #10b981; }',
+
+                '.__cyber-toast--success .__cyber-toast-icon { color: #10b981; filter: drop-shadow(0 0 6px #10b981); }',
+
+                '.__cyber-toast--success .__cyber-toast-bar { background: linear-gradient(90deg, #10b981, #34d399); }',
+
+                /* Error */
+
+                '.__cyber-toast--error {',
+
+                '  background: linear-gradient(135deg, rgba(40,10,10,0.55) 0%, rgba(30,10,20,0.55) 100%);',
+
+                '}',
+
+                '.__cyber-toast--error::before { background: #ef4444; box-shadow: 0 0 10px #ef4444; }',
+
+                '.__cyber-toast--error .__cyber-toast-icon { color: #ef4444; filter: drop-shadow(0 0 6px #ef4444); }',
+
+                '.__cyber-toast--error .__cyber-toast-bar { background: linear-gradient(90deg, #ef4444, #fca5a5); }',
+
+                /* Warning */
+
+                '.__cyber-toast--warning {',
+
+                '  background: linear-gradient(135deg, rgba(40,30,5,0.55) 0%, rgba(30,20,5,0.55) 100%);',
+
+                '}',
+
+                '.__cyber-toast--warning::before { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; }',
+
+                '.__cyber-toast--warning .__cyber-toast-icon { color: #f59e0b; filter: drop-shadow(0 0 6px #f59e0b); }',
+
+                '.__cyber-toast--warning .__cyber-toast-bar { background: linear-gradient(90deg, #f59e0b, #fcd34d); }',
+
+                /* Info */
+
+                '.__cyber-toast--info {',
+
+                '  background: linear-gradient(135deg, rgba(5,20,45,0.55) 0%, rgba(5,15,40,0.55) 100%);',
+
+                '}',
+
+                '.__cyber-toast--info::before { background: #38bdf8; box-shadow: 0 0 10px #38bdf8; }',
+
+                '.__cyber-toast--info .__cyber-toast-icon { color: #38bdf8; filter: drop-shadow(0 0 6px #38bdf8); }',
+
+                '.__cyber-toast--info .__cyber-toast-bar { background: linear-gradient(90deg, #38bdf8, #7dd3fc); }',
+
+                /* Icon */
+
+                '.__cyber-toast-icon {',
+
+                '  font-size: 18px;',
+
+                '  flex-shrink: 0;',
+
+                '  line-height: 1;',
+
+                '}',
+
+                '.__cyber-toast-msg {',
+
+                '  flex: 1;',
+
+                '  line-height: 1.45;',
+
+                '  word-break: break-word;',
+
+                '}'
+
+            ].join('');
+
+            document.head.appendChild(s);
+
+        }
+
+
+
+        // Get or create container
+
+        function getContainer() {
+
+            var c = document.getElementById('__cyber-toast-container__');
+
+            if (!c) {
+
+                c = document.createElement('div');
+
+                c.id = '__cyber-toast-container__';
+
+                document.body.appendChild(c);
+
+            }
+
+            return c;
+
+        }
+
+
+
+        var ICONS = {
+
+            success: '✓',
+
+            error: '✕',
+
+            warning: '⚠',
+
+            info: 'ℹ'
+
+        };
+
+
+
+        window.showToast = function (msg, type, duration) {
+
+            type = type || 'info';
+
+            duration = duration || 3000;
+
+            var container = getContainer();
+
+
+
+            var el = document.createElement('div');
+
+            el.className = '__cyber-toast __cyber-toast--' + type;
+
+            el.innerHTML = [
+
+                '<span class="__cyber-toast-icon">' + (ICONS[type] || 'ℹ') + '</span>',
+
+                '<span class="__cyber-toast-msg">' + msg + '</span>',
+
+                '<div class="__cyber-toast-bar" style="animation-duration:' + (duration / 1000) + 's"></div>'
+
+            ].join('');
+
+
+
+            container.appendChild(el);
+
+
+
+            // Trigger enter animation
+
+            setTimeout(function () { el.classList.add('show'); }, 10);
+
+
+
+            // Auto remove
+
+            var timer = setTimeout(function () {
+
+                el.classList.add('hide');
+
+                setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 400);
+
+            }, duration);
+
+
+
+            // Pause on hover
+
+            el.addEventListener('mouseenter', function () { clearTimeout(timer); el.querySelector('.__cyber-toast-bar').style.animationPlayState = 'paused'; });
+
+            el.addEventListener('mouseleave', function () {
+
+                el.querySelector('.__cyber-toast-bar').style.animationPlayState = 'running';
+
+                timer = setTimeout(function () {
+
+                    el.classList.add('hide');
+
+                    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 400);
+
+                }, 800);
+
+            });
+
+        };
+
+    })();
+
+    $(function() {
+        if (window.jQuery && $.fn.selectpicker && $.fn.selectpicker.Constructor) {
+            $.fn.selectpicker.Constructor.DEFAULTS.size = 6;
+        }
+        var $selects = $(".soft-search-select");
+        if ($selects.length > 0) {
+            $.ajax({
+                type: "get",
+                url: "/admin/soft/getSoftListsimple.html",
+                cache: false,
+                dataType: "json",
+                success: function (data) {
+                    if (data && data.code === 0 && data.rows) {
+                        $selects.each(function() {
+                            var $sel = $(this);
+                            var val = $sel.val() || "";
+                            $sel.empty();
+                            $sel.append('<option value="">全部</option>');
+                            for (var i = 0; i < data.total; i++) {
+                                var name = data.rows[i].name;
+                                $sel.append('<option value="' + name + '">' + name + '</option>');
+                            }
+                            $sel.selectpicker({ size: 6 });
+                            $sel.selectpicker("refresh");
+                            if (val) {
+                                $sel.selectpicker("val", val);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>

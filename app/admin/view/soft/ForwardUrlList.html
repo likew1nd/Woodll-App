@@ -1,0 +1,417 @@
+<link href="__ADMIN__/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+
+<body>
+
+    <div class="panel-body" style="padding-bottom:0px;">
+        <div class="ibox-content " style="padding-bottom: 0">
+            <form role="form" class="form-inline" onsubmit="return false;">
+                <div class="form-group">
+                    <label class="row-sm-2 control-label">软件名称：</label>
+                    <select class="form-control selectpicker soft-search-select" id="softName" data-live-search="true" data-container="body"><option value="">全部</option></select>
+                    <span class="form-group-btn">
+                        <button type="button" class="btn btn-primary" style="margin-bottom:0px"
+                            onclick="javascript:search()">搜索
+                        </button>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="form-group-btn">
+                        <button type="button" class="btn btn-primary" style="margin-bottom:0px"
+                            onclick="javascript:reload()">刷新
+                        </button>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="form-group-btn">
+                        <button type="button" class="btn btn-primary" style="margin-bottom:0px"
+                            onclick="javascript:addForward()">添加转发
+                        </button>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="form-group-btn">
+                        <button type="button" class="btn btn-danger" id="btn_delete_batch" style="margin-bottom:0px"
+                            disabled onclick="javascript:deleteBatch()">删除</button>
+                    </span>
+                </div>
+            </form>
+        </div>
+        <table id="tb_departments" data-show-fullscreen="true" data-show-export="true"></table>
+        <div id="customPager" class="custom-pager"></div>
+    </div>
+    <style>
+        .custom-pager {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 18px 18px;
+            color: #c8d3e3;
+            font-size: 13px;
+        }
+
+        .custom-pager button {
+            min-width: 34px;
+            height: 30px;
+            padding: 0 10px;
+            border: 1px solid rgba(99, 118, 154, .5);
+            border-radius: 8px;
+            background: rgba(27, 39, 62, .9);
+            color: #dbe7ff;
+            cursor: pointer;
+        }
+
+        .custom-pager button:hover:not(:disabled),
+        .custom-pager button.active {
+            border-color: #7c5cff;
+            background: #7c5cff;
+            color: #fff;
+        }
+
+        .custom-pager button:disabled {
+            cursor: not-allowed;
+            opacity: .45;
+        }
+
+        .custom-pager .custom-pager-info {
+            margin-right: 8px;
+            color: #91a3bd;
+        }
+    </style>
+
+
+    <script>
+        var customPagerState = { total: 0, limit: 10, offset: 0 };
+        $(function () {
+var grid = {};
+            var queryParamsArray = {};
+            //1.初始化Table
+            var oTable = new TableInit();
+            oTable.Init();
+            //2.初始化Button的点击事件
+            var oButtonInit = new ButtonInit();
+            oButtonInit.Init();
+
+            $('#tb_departments').on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table load-success.bs.table', function () {
+                var selections = $('#tb_departments').bootstrapTable('getSelections');
+                if (selections.length > 0) {
+                    $('#btn_delete_batch').prop('disabled', false);
+                } else {
+                    $('#btn_delete_batch').prop('disabled', true);
+                }
+            });
+        });
+
+
+        var TableInit = function () {
+
+            var oTableInit = new Object();
+            //初始化Table
+            oTableInit.Init = function () {
+                grid = $('#tb_departments').bootstrapTable({
+                    url: '/admin/soft/getForwardUrlList',         //请求后台的URL（*）
+                    method: 'get',                      //请求方式（*）
+                    toolbar: '#toobar',//工具列
+                    undefinedText: "无",
+                    striped: true,//隔行换色
+                    cache: false,//禁用缓存
+                    pagination: true,//启动分页
+                    sidePagination: 'server',//分页方式
+                    pageNumber: 1,//初始化table时显示的页码
+                    pageSize: 10,//每页条目
+                    pageList: [10, 20, 50, 100],
+                    showFooter: false,//是否显示列脚
+                    showPaginationSwitch: false,//是否显示 数据条数选择框
+                    sortable: false,//排序
+                    search: false,//启用搜索
+                    showColumns: false,//是否显示 内容列下拉框
+                    showRefresh: false,//显示刷新按钮
+                    // // height: $(window).height() - 100, //自定义表格的高度
+                    idField: 'id',//key值栏位
+                    //clickToSelect: true,//点击选中checkbox
+                    // singleSelect: true,//启用单行选中
+                    exportDataType: 'all',
+                    queryParams: oTableInit.queryParams,
+                    onLoadSuccess: function (data) {
+                        try {
+                            var rows = data.rows || data;
+                            if (rows && rows.length) {
+                                var rowCount = rows.length - 1;
+                                var $table = $('#tb_departments');
+                                if ($table.length && typeof $table.bootstrapTable === 'function') {
+                                    $table.bootstrapTable('hideRow', { index: rowCount });
+                                    $table.find("td").attr("data-tableexport-msonumberformat", "\@");
+                                    $table.find("tr").attr("data-tableexport-display", "always");
+                                }
+                            }
+                            renderCustomPager(data);
+                        } catch (e) {
+                            console.warn("onLoadSuccess error:", e);
+                        }
+                    },
+                    onPageChange: function (number, size) {
+                        try {
+                            var $table = $('#tb_departments');
+                            if ($table.length) {
+                                $table.find("td").attr("data-tableexport-msonumberformat", "\@");
+                                $table.find("tr").attr("data-tableexport-display", "always");
+                            }
+                        } catch (e) {
+                            console.warn("onPageChange error:", e);
+                        }
+                    },
+                    showExport: true,  //是否显示导出按钮
+                    buttonsAlign: "right",  //按钮位置
+                    exportTypes: ['excel'],  //导出文件类型
+                    Icons: 'glyphicon-export',
+                    columns: [{
+                        checkbox: true
+                    }, {
+                        field: 'id',
+                        title: '编号',
+                        align: 'center'
+                    }, {
+                        field: 'sname',
+                        title: '软件名称',
+                        align: 'center'
+                    }, {
+                        field: 'name',
+                        title: '标签',
+                        align: 'center'
+                    }, {
+                        field: 'type',
+                        title: '请求方式',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return value == 0 ? "get" : "post";
+                        }
+                    }, {
+                        field: 'status',
+                        title: '状态',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return value == 0 ? "正常" : "锁定";
+                        }
+                    }, {
+                        field: 'add_time',
+                        title: '创建时间',
+                        align: 'center'
+                    }, {
+                        field: '',
+                        title: '操作',
+                        formatter: function (value, row, index) {
+                            if (row.status == 0) {
+                                $altStatus = "<a onClick='javascript:changeForwardStatus(" + row.id + ",1)'>锁定</a>&nbsp;&nbsp;"
+                            } else {
+                                $altStatus = "<a onClick='javascript:changeForwardStatus(" + row.id + ",0)'>解锁</a>&nbsp;&nbsp;"
+                            }
+                            var html = $altStatus +
+                                "<a onClick='javascript:editForward(" + row.id + ")'>编辑</a>&nbsp;&nbsp;" +
+                                "<a onClick='javascript:deleteForward(" + row.id + ")'>删除</a>&nbsp;&nbsp;";
+                            return html;
+                        }
+                    },]
+                });
+            };
+
+            //得到查询的参数
+            oTableInit.queryParams = function (params) {
+                customPagerState.limit = params.limit || customPagerState.limit;
+                customPagerState.offset = params.offset || 0;
+                var temp = {   //这里的键的名字和控制器的函数名必须一直，这边改动，控制器也需要改成一样的
+                    limit: params.limit,   //页面大小
+                    offset: params.offset,  //页码
+                    sname: $("#softName").val()
+                };
+                return temp;
+            };
+            return oTableInit;
+        };
+
+
+        var ButtonInit = function () {
+            var oInit = new Object();
+            var postdata = {};
+
+            oInit.Init = function () {
+                //初始化页面上面的按钮事件
+            };
+
+            return oInit;
+        };
+        function reload() {
+            grid.bootstrapTable('refresh');
+        }
+
+        function renderCustomPager(data) {
+            var total = parseInt(data && data.total ? data.total : 0, 10);
+            var limit = parseInt(customPagerState.limit || 10, 10);
+            var offset = parseInt(customPagerState.offset || 0, 10);
+            var page = Math.floor(offset / limit) + 1;
+            var pages = Math.max(Math.ceil(total / limit), 1);
+            var $pager = $('#customPager');
+
+            if (!total || pages <= 1) {
+                $pager.empty();
+                return;
+            }
+
+            var html = '<span class="custom-pager-info">共 ' + total + ' 条，第 ' + page + ' / ' + pages + ' 页</span>';
+            html += '<button type="button" ' + (page <= 1 ? 'disabled' : '') + ' onclick="gotoCustomPage(' + (page - 1) + ')">上一页</button>';
+
+            var start = Math.max(1, page - 2);
+            var end = Math.min(pages, page + 2);
+            if (start > 1) {
+                html += '<button type="button" onclick="gotoCustomPage(1)">1</button>';
+                if (start > 2) html += '<span>...</span>';
+            }
+            for (var i = start; i <= end; i++) {
+                html += '<button type="button" class="' + (i === page ? 'active' : '') + '" onclick="gotoCustomPage(' + i + ')">' + i + '</button>';
+            }
+            if (end < pages) {
+                if (end < pages - 1) html += '<span>...</span>';
+                html += '<button type="button" onclick="gotoCustomPage(' + pages + ')">' + pages + '</button>';
+            }
+
+            html += '<button type="button" ' + (page >= pages ? 'disabled' : '') + ' onclick="gotoCustomPage(' + (page + 1) + ')">下一页</button>';
+            $pager.html(html);
+        }
+
+        function gotoCustomPage(page) {
+            if (!grid || page < 1) return;
+            grid.bootstrapTable('refreshOptions', {
+                pageNumber: page
+            });
+        }
+
+    </script>
+
+    <!-- Bootstrap table -->
+    <script src="__ADMIN__/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="__ADMIN__/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="__ADMIN__/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="__ADMIN__/js/plugins/layer/laydate/laydate.js"></script>
+    <script>
+
+        function queryParams(params) {
+            var resultParams = $.extend({}, params, oTableInit.queryParams);
+            return resultParams;
+        }
+
+        function setQueryParams(key, value) {
+            oTableInit.queryParams[key] = value;
+        }
+        function search() {
+            $("#tb_departments").bootstrapTable("refreshOptions", { pageNumber: 1 });
+            reload();
+        }
+        //添加软件
+        function addForward() {
+            parent.layer.open({
+                type: 2,
+                title: '{$user.username} - 添加转发',
+                shadeClose: true,
+                shade: false,
+                offset: '100px',
+                area: ['800px', '290px'],
+                content: ['/admin/soft/addForward.html', 'no']
+            });
+        }
+        //编辑软件
+        function editForward(id) {
+            parent.layer.open({
+                type: 2,
+                title: '{$user.username} - 算法转发编辑',
+                shadeClose: true,
+                shade: false,
+                offset: '100px',
+                area: ['800px', '290px'],
+                content: ['/admin/soft/addForward.html?id=' + id, 'no']
+            });
+        }
+        //删除软件
+        function deleteForward(id) {
+            if (id == '') {
+                showToast("转发算法编号不能缺省", "info");
+            } else {
+                layer.confirm("您确定要删除该转发吗？", { title: '温馨提示', formType: 1 }, function (index) {
+                    $.ajax({
+                        url: "/admin/Soft/deleteForward",
+                        type: "post",
+                        dataType: "json",
+                        data: "id=" + id,
+                        success: function (data) {
+                            if (data.code == 0) {
+                                showToast(data.msg, 'success')
+                                layer.close(index);
+                                reload();
+                            } else {
+                                showToast(data.msg, 'success')
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            showToast("系统在开小差，请稍后再试", "info");
+                        }
+                    });
+                });
+            }
+        }
+        function deleteBatch() {
+            var selections = $('#tb_departments').bootstrapTable('getSelections');
+            if (selections.length <= 0) return;
+            layer.confirm("您确定要批量删除这 " + selections.length + " 个转发吗？", { title: '温馨提示', formType: 1 }, function (index) {
+                layer.close(index);
+                var ids = selections.map(function(row) { return row.id; });
+                var completed = 0;
+                var successCount = 0;
+                var loadIndex = layer.load(2);
+                function deleteNext() {
+                    if (completed >= ids.length) {
+                        layer.close(loadIndex);
+                        showToast("成功删除了 " + successCount + " 个转发", "success");
+                        reload();
+                        return;
+                    }
+                    var id = ids[completed];
+                    $.ajax({
+                        url: "/admin/Soft/deleteForward",
+                        type: "post",
+                        dataType: "json",
+                        data: "id=" + id,
+                        success: function (data) {
+                            if (data.code == 0) {
+                                successCount++;
+                            }
+                            completed++;
+                            deleteNext();
+                        },
+                        error: function () {
+                            completed++;
+                            deleteNext();
+                        }
+                    });
+                }
+                deleteNext();
+            });
+        }
+        //更改转发算法状态
+        function changeForwardStatus(id, status) {
+            $.ajax({
+                url: "/admin/Soft/changeForwardStatus",
+                type: "post",
+                dataType: "json",
+                data: "id=" + id + "&status=" + status,
+                success: function (data) {
+                    if (data.code == 0) {
+                        showToast(data.msg, 'success')
+                        reload();
+                    } else {
+                        showToast(data.msg, 'success')
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    showToast("系统在开小差，请稍后再试", "info");
+                }
+            });
+        }
+    </script>

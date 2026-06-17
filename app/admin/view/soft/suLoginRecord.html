@@ -1,0 +1,339 @@
+<link href="__ADMIN__/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+<body>
+
+<div class="panel-body" style="padding-bottom:0px;">
+    <div class="ibox-content " style="padding-bottom: 0">
+        <form role="form" class="form-inline" onsubmit="return false;">
+            <div class="form-group">
+                <label class="row-sm-2 control-label">软件名称：</label>
+                <select class="form-control selectpicker soft-search-select" id="sname" data-live-search="true" data-container="body"><option value="">全部</option></select>
+                <label class="row-sm-2 control-label">&nbsp;&nbsp;&nbsp;&nbsp;用户名称：</label>
+                <input type="text" id="username" class="form-control" placeholder="请输入用户名称">
+                        <span class="form-group-btn">
+							<button type="button" class="btn btn-primary" style="margin-bottom:0px"
+                                    onclick="javascript:search()">搜索
+                            </button>
+						</span>
+            </div>
+            <div class="form-group">
+                           <span class="form-group-btn">
+                                  <button type="button" class="btn btn-primary" style="margin-bottom:0px"
+                                          onclick="javascript:reload()">刷新
+                                  </button>
+                           </span>
+            </div>
+        </form>
+    </div>
+    <table id="tb_departments"
+           data-show-fullscreen="true"
+           data-show-export="true"
+            ></table>
+    <div id="customPager" class="custom-pager"></div>
+</div>
+<style>
+    .custom-pager { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 14px 18px 18px; color: #c8d3e3; font-size: 13px; }
+    .custom-pager button { min-width: 34px; height: 30px; padding: 0 10px; border: 1px solid rgba(99, 118, 154, .5); border-radius: 8px; background: rgba(27, 39, 62, .9); color: #dbe7ff; cursor: pointer; }
+    .custom-pager button:hover:not(:disabled), .custom-pager button.active { border-color: #7c5cff; background: #7c5cff; color: #fff; }
+    .custom-pager button:disabled { cursor: not-allowed; opacity: .45; }
+    .custom-pager .custom-pager-info { margin-right: 8px; color: #91a3bd; }
+</style>
+
+
+<script>
+    var customPagerState = { total: 0, limit: 10, offset: 0 };
+    $(function () {
+var grid = {};
+        var queryParamsArray = {};
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+        //2.初始化Button的点击事件
+        var oButtonInit = new ButtonInit();
+        oButtonInit.Init();
+    });
+
+
+    var TableInit = function () {
+
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            grid = $('#tb_departments').bootstrapTable({
+                url: '/admin/Soft_User/getSuLoginRecord',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toobar',//工具列
+                undefinedText: "无",
+                striped: true,//隔行换色
+                cache: false,//禁用缓存
+                pagination: true,//启动分页
+                sidePagination: 'server',//分页方式
+                pageNumber: 1,//初始化table时显示的页码
+                pageSize: 10,//每页条目
+                pageList: [10, 20, 50, 100],
+                showFooter: false,//是否显示列脚
+                showPaginationSwitch: false,//是否显示 数据条数选择框
+                // // height: $(window).height() - 100, //自定义表格的高度
+                sortable: false,//排序
+                search: false,//启用搜索
+                showColumns: false,//是否显示 内容列下拉框
+                showRefresh: false,//显示刷新按钮
+                idField: 'id',//key值栏位
+                //clickToSelect: true,//点击选中checkbox
+                // singleSelect: true,//启用单行选中
+                exportDataType: 'all',
+                queryParams: oTableInit.queryParams,
+                onLoadSuccess: function (data) {
+                    try {
+                        var rows = data.rows || data;
+                        if (rows && rows.length) {
+                            var rowCount = rows.length - 1;
+                            var $table = $('#tb_departments');
+                            if ($table.length && typeof $table.bootstrapTable === 'function') {
+                                $table.bootstrapTable('hideRow', { index: rowCount });
+                                $table.find("td").attr("data-tableexport-msonumberformat", "\@");
+                                $table.find("tr").attr("data-tableexport-display", "always");
+                            }
+                        }
+                        renderCustomPager(data);
+                    } catch (e) {
+                        console.warn("onLoadSuccess error:", e);
+                    }
+                },
+                onPageChange: function (number, size) {
+                    try {
+                        var $table = $('#tb_departments');
+                        if ($table.length) {
+                            $table.find("td").attr("data-tableexport-msonumberformat", "\@");
+                            $table.find("tr").attr("data-tableexport-display", "always");
+                        }
+                    } catch (e) {
+                        console.warn("onPageChange error:", e);
+                    }
+                },
+                showExport: true,  //是否显示导出按钮
+                buttonsAlign: "right",  //按钮位置
+                exportTypes: ['excel'],  //导出文件类型
+                Icons: 'glyphicon-export',
+                columns: [{
+                    checkbox: true
+                }, {
+                    field: 'sname',
+                    title: '所属软件',
+                    align: 'center'
+                }, {
+                    field: 'username',
+                    title: '用户名',
+                    align: 'center'
+                }, {
+                    field: 'maccode',
+                    title: '机器码',
+                    align: 'center'
+                }, {
+                    field: 'ip',
+                    title: '登录IP',
+                    align: 'center'
+                }, {
+                    field: 'city',
+                    title: '登录位置',
+                    align: 'center'
+                },{
+                    field: 'softMD5',
+                    title: '主程序MD5',
+                    align: 'center'
+                }, {
+                    field: 'heart_time',
+                    title: '最后心跳时间',
+                    align: 'center'
+                }, {
+                    field: 'login_time',
+                    title: '登录时间',
+                    align: 'center'
+                }
+                    , {
+                        field: 'status',
+                        title: '状态',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if (value == 0) {
+                                    return '在线';
+                            } else {
+                                return '离线';
+                            }
+                        }
+                    },
+                    {
+                        field: 'login_time',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            return '<a onclick="goOut(' + row.id + ')">下线</a>&nbsp;&nbsp;<a onclick="sendMsgPage(' + row.id + ')">发送消息</a>';
+                        }
+                    }
+
+                ]
+            });
+        };
+
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            customPagerState.limit = params.limit || customPagerState.limit;
+            customPagerState.offset = params.offset || 0;
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                sname: $("#sname").val(),
+                username: $("#username").val()
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+
+
+    var ButtonInit = function () {
+        var oInit = new Object();
+        var postdata = {};
+
+        oInit.Init = function () {
+            //初始化页面上面的按钮事件
+        };
+
+        return oInit;
+    };
+    function reload() {
+        grid.bootstrapTable('refresh');
+    }
+
+    function renderCustomPager(data) {
+        var total = parseInt(data && data.total ? data.total : 0, 10);
+        var limit = parseInt(customPagerState.limit || 10, 10);
+        var offset = parseInt(customPagerState.offset || 0, 10);
+        var page = Math.floor(offset / limit) + 1;
+        var pages = Math.max(Math.ceil(total / limit), 1);
+        var $pager = $('#customPager');
+
+        if (!total || pages <= 1) {
+            $pager.empty();
+            return;
+        }
+
+        var html = '<span class="custom-pager-info">共 ' + total + ' 条，第 ' + page + ' / ' + pages + ' 页</span>';
+        html += '<button type="button" ' + (page <= 1 ? 'disabled' : '') + ' onclick="gotoCustomPage(' + (page - 1) + ')">上一页</button>';
+
+        var start = Math.max(1, page - 2);
+        var end = Math.min(pages, page + 2);
+        if (start > 1) {
+            html += '<button type="button" onclick="gotoCustomPage(1)">1</button>';
+            if (start > 2) html += '<span>...</span>';
+        }
+        for (var i = start; i <= end; i++) {
+            html += '<button type="button" class="' + (i === page ? 'active' : '') + '" onclick="gotoCustomPage(' + i + ')">' + i + '</button>';
+        }
+        if (end < pages) {
+            if (end < pages - 1) html += '<span>...</span>';
+            html += '<button type="button" onclick="gotoCustomPage(' + pages + ')">' + pages + '</button>';
+        }
+
+        html += '<button type="button" ' + (page >= pages ? 'disabled' : '') + ' onclick="gotoCustomPage(' + (page + 1) + ')">下一页</button>';
+        $pager.html(html);
+    }
+
+    function gotoCustomPage(page) {
+        if (!grid || page < 1) return;
+        grid.bootstrapTable('refreshOptions', {
+            pageNumber: page
+        });
+    }
+
+</script>
+
+<!-- Bootstrap table -->
+<script src="__ADMIN__/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="__ADMIN__/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="__ADMIN__/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="__ADMIN__/js/plugins/layer/laydate/laydate.js"></script>
+<script>
+
+    function queryParams(params) {
+        var resultParams = $.extend({}, params, oTableInit.queryParams);
+        return resultParams;
+    }
+
+    function setQueryParams(key, value) {
+        oTableInit.queryParams[key] = value;
+    }
+    function search() {
+        $("#tb_departments").bootstrapTable("refreshOptions", {pageNumber: 1});
+        reload();
+    }
+    //删除软件用户
+    function goOut(id) {
+        if (id == '') {
+            showToast("用户编号不能缺省", "info");
+        } else {
+            layer.confirm("下线用户将会导致用户心跳失败<br>您确定要下线该用户吗？", {title: '温馨提示', formType: 1}, function (index) {
+                $.ajax({
+                    url: "/admin/api/getOut.html?id=" + id,
+                    type: "post",
+                    dataType: "json",
+                    data: "id=" + id,
+                    success: function (data) {
+                        if (data.code == 0) {
+                            showToast(data.msg, 'success')
+                            layer.close(index);
+                            reload();
+                        } else {
+                            showToast(data.msg, 'success')
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        showToast("系统在开小差，请稍后再试", "info");
+                    }
+                });
+            });
+        }
+    }
+    //检测心跳时间,判断是否在线
+    function checkOnline(date) {
+        date = date.substring(0, 19);
+        date = date.replace(/-/g, '/');
+        var timestamp = new Date(date).getTime() / 1000;
+        var now = new Date().getTime() / 1000;
+        return timestamp < (now - 361);
+    }
+    function getLocalTime(nS) {
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+    }
+    function sendMsgPage(id) {
+        layer.use('extend/layer.ext.js', function () {
+            layer.prompt({title: '请填写发送内容,软件必须为socket心跳模式才可以发送,最多50个字', formType: 2}, function (text, index) {
+                if(text.length>20){
+                    showToast("发送内容不能超过50个字符", "info")
+                    return;
+                }
+                layer.close(index);
+                $.ajax({
+                    url: "/admin/Soft_User/sendMsgByUid",
+                    type: "post",
+                    dataType: "json",
+                    data: "id=" + id +"&msg=" + text,
+                    success: function (data) {
+                        if (data.code == 0) {
+                            layer.alert(data.msg, {
+                                icon: 1
+                            });
+                            reload();
+                        } else {
+                            layer.alert(data.msg, {
+                                icon: 5
+                            });
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        showToast("系统在开小差，请稍后再试", "info");
+                    }
+                });
+            });
+        });
+    }
+</script>

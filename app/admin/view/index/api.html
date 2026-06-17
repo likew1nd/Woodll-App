@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WOODLL 网络验证 - 客户端 API 说明文档</title>
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ==========================================
+           WOODLL Premium Cyberpunk Dark Theme Styles
+           ========================================== */
+        :root {
+            --bg-main: #030712;
+            --bg-sidebar: #090d16;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-code: #0b0f19;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-color-glow: rgba(56, 189, 248, 0.2);
+
+            --text-main: #cbd5e1;
+            --text-heading: #f8fafc;
+            --text-muted: #64748b;
+
+            --color-primary: #38bdf8;
+            /* Cyan */
+            --color-primary-rgb: 56, 189, 248;
+            --color-accent: #a855f7;
+            /* Purple */
+            --color-success: #10b981;
+            /* Emerald */
+            --color-error: #ef4444;
+            /* Red */
+            --color-warning: #f59e0b;
+            /* Amber */
+
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            height: 100vh;
+            padding: 15px !important;
+            gap: 15px !important;
+        }
+
+        /* Webkit scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+            border: 2px solid var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+
+        /* ==========================================
+           Sidebar Layout
+           ========================================== */
+        aside {
+            width: 320px;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px !important;
+            display: flex;
+            height: 100%;
+            flex-shrink: 0;
+            z-index: 10;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            background-color: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px 10px 38px;
+            color: var(--text-heading);
+            font-size: 13px;
+            transition: var(--transition-smooth);
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 12px 24px;
+        }
+
+        .menu-category {
+            margin-bottom: 24px;
+        }
+
+        .category-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 0 12px 8px;
+        }
+
+        .menu-list {
+            list-style: none;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-radius: 6px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 13.5px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            margin-bottom: 4px;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+            color: var(--text-heading);
+        }
+
+        .menu-item.active {
+            background-color: rgba(56, 189, 248, 0.08);
+            border-left: 3px solid var(--color-primary);
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .badge-wtype {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            color: var(--text-muted);
+        }
+
+        .menu-item.active .badge-wtype {
+            background-color: rgba(56, 189, 248, 0.2);
+            color: var(--color-primary);
+        }
+
+        /* ==========================================
+           Main Workspace Layout
+           ========================================== */
+        main {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+            background-color: transparent !important;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            flex-shrink: 0;
+            background-color: rgba(9, 13, 22, 0.6);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-heading);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .meta-item strong {
+            color: var(--text-main);
+        }
+
+        .workspace {
+            padding: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glassmorphism Panel card */
+        .api-card {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px !important;
+            padding: 24px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+            backdrop-filter: blur(16px) !important;
+            margin-bottom: 0 !important;
+            flex: 1;
+        }
+
+        .api-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .method-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            background-color: var(--color-success);
+            color: white;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .endpoint-path {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--text-heading);
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .api-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .api-description {
+            font-size: 15px;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            border-left: 3px solid var(--color-primary);
+            padding-left: 16px;
+        }
+
+        /* Tabs System */
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-heading);
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--color-primary);
+            box-shadow: 0 0 8px var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* Parameter Table Styling */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: rgba(9, 13, 22, 0.4);
+            margin-bottom: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13.5px;
+        }
+
+        th {
+            background-color: rgba(255, 255, 255, 0.02);
+            color: var(--text-heading);
+            font-weight: 600;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        .param-name {
+            font-family: var(--font-mono);
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .param-type {
+            font-family: var(--font-mono);
+            color: var(--color-accent);
+            font-size: 12px;
+        }
+
+        .param-req {
+            font-weight: 600;
+        }
+
+        .param-req.yes {
+            color: var(--color-error);
+        }
+
+        .param-req.no {
+            color: var(--text-muted);
+        }
+
+        /* Code Blocks styling */
+        .code-container {
+            position: relative;
+            background-color: #0b0f19 !important;
+            border: 1px solid rgba(56, 189, 248, 0.15) !important;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background-color: rgba(255, 255, 255, 0.02) !important;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.15) !important;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .code-lang {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+        }
+
+        .btn-copy:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-heading);
+            border-color: var(--color-primary);
+        }
+
+        pre {
+            margin: 0 !important;
+            padding: 20px !important;
+            overflow-x: auto !important;
+            background-color: #0b0f19 !important;
+        }
+
+        code {
+            font-family: var(--font-mono) !important;
+            font-size: 13.5px !important;
+            color: #34d399 !important;
+            /* Soft Emerald Code Color for readability */
+            background-color: transparent !important;
+        }
+
+        /* Toast system */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--color-success);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            font-weight: 500;
+            font-size: 14px;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition-smooth);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* General Guide Block markup */
+        .guide-section {
+            margin-bottom: 24px;
+        }
+
+        .guide-section h3 {
+            font-size: 16px;
+            color: var(--text-heading);
+            margin-bottom: 12px;
+            margin-top: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .guide-section p {
+            margin-bottom: 12px;
+            font-size: 14.5px;
+        }
+
+        .guide-section ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .guide-section li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .guide-section code {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            color: var(--color-primary);
+            font-size: 12.5px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Mobile layout adjustments */
+        @media (max-width: 991px) {
+            body {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+                height: auto;
+                max-height: 400px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            header {
+                padding: 0 20px;
+            }
+
+            .workspace {
+                padding: 20px;
+            }
+
+            .api-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Left navigation menu -->
+    <aside>
+        <div class="sidebar-header">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" placeholder="搜索接口名称..." oninput="handleSearch()">
+            </div>
+        </div>
+
+        <div class="sidebar-menu" id="sidebarMenu">
+            <!-- Dynamic menu list injected here -->
+        </div>
+    </aside>
+
+    <!-- Content Detail Area -->
+    <main>
+
+
+        <div class="workspace">
+            <div class="api-card">
+                <div id="detailContainer">
+                    <!-- Dynamic details injected here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Clipboard Toast -->
+    <div class="toast" id="copyToast">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        复制成功!
+    </div>
+
+    <!-- Data Database and Interface Controller -->
+    <script>
+        const projectData = {
+            categories: [
+                {
+                    title: "接入引导",
+                    items: [
+                        {
+                            id: "guide",
+                            name: "封包及加解密说明",
+                            isGuide: true,
+                            description: "系统底层网络数据打包、对称加密、签名防篡改校验等开发指南"
+                        },
+                        {
+                            id: "status_codes",
+                            name: "系统状态码说明",
+                            isStatusCodes: true,
+                            description: "WOODLL 网络验证系统网关通信状态码（返回码）对照表"
+                        }
+                    ]
+                },
+                {
+                    title: "会话与验证接口",
+                    items: [
+                        {
+                            id: "init",
+                            name: "初始化验证",
+                            wtype: 1,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "客户端网络验证的第一步。服务端按请求头 APPID 查找软件，按 init=1 使用软件密钥前24位解密请求体，完成版本检测、密钥交换和强制更新判断，并返回后续业务请求使用的 privateKey 与 privateSalt。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；服务端读取 HTTP_APPID，并据此查找软件配置" },
+                                { name: "init", type: "int", required: "是", desc: "初始化请求固定传 1；服务端据此使用软件密钥前24位和 DES 解密" }
+                            ],
+                            params: [
+                                { name: "appid", type: "int", required: "是", desc: "封包内的软件 ID，需与请求头 APPID 保持一致" },
+                                { name: "wtype", type: "int", required: "是", desc: "固定值 1" },
+                                { name: "timestamp", type: "int|string", required: "是", desc: "客户端封包时间戳；当前服务端保留时间偏差校验代码但未启用" },
+                                { name: "data", type: "array", required: "是", desc: "内嵌单对象列表，对象字段包含 key（软件密钥 MD5）与 version（客户端版本号）" },
+                                { name: "sign", type: "string", required: "是", desc: "签名校验码：MD5(appid + data字段原文 + 软件密钥前24位 + timestamp)" }
+                            ],
+                            requestPayload: {
+                                "appid": 35,
+                                "wtype": 1,
+                                "timestamp": "1557583476386",
+                                "data": [
+                                    {
+                                        "key": "2278D892BEA1BF3C3B28F14AF66025AA",
+                                        "version": "1.0"
+                                    }
+                                ],
+                                "sign": "f17a1d543e8e56d17188dec5e027df31"
+                            },
+                            successResponse: {
+                                "msg": "成功",
+                                "data": {
+                                    "id": 1,
+                                    "uid": 1,
+                                    "name": "示例软件",
+                                    "version": "1.0",
+                                    "notice": "这里是云端下发的软件公告信息",
+                                    "data": "这里是云端下发的软件基础数据",
+                                    "encryptType": 0,
+                                    "privateSalt": "RSA_ENCRYPTED_PRIVATE_SALT_BASE64",
+                                    "privateKey": "RSA_ENCRYPTED_PRIVATE_KEY_BASE64",
+                                    "encKey": "SERVER_RSA_PUBLIC_KEY_CONTENT",
+                                    "status": "收费",
+                                    "isSocket": 0,
+                                    "ver": {
+                                        "name": "release",
+                                        "ver": "1.0",
+                                        "checkUpdate": 0,
+                                        "updateUrl": "/uploads/files/demo.zip",
+                                        "notice": ""
+                                    }
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "版本不存在",
+                                "data": [],
+                                "code": -10004
+                            }
+                        },
+                        {
+                            id: "register",
+                            name: "用户注册",
+                            wtype: 2,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "用户注册新账户。支持后台开关注册功能，并依据后台规则限制单IP/单硬件机器码每日最高注册频次，可赠送免费点数或时长。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "username", type: "string", required: "是", desc: "注册用户名，长度须大于等于6" },
+                                { name: "password", type: "string", required: "是", desc: "注册密码，长度须大于等于6" },
+                                { name: "maccode", type: "string", required: "是", desc: "注册客户端所在的物理设备机器码" }
+                            ],
+                            requestPayload: {
+                                "username": "newuser888",
+                                "password": "password123",
+                                "maccode": "D8FD165858BED7825BEB2F057DBDB14D"
+                            },
+                            successResponse: {
+                                "msg": "恭喜您注册成功!",
+                                "data": [],
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "用户名已经被注册啦",
+                                "data": [],
+                                "code": -10008
+                            }
+                        },
+                        {
+                            id: "login",
+                            name: "用户登录",
+                            wtype: 3,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "用户账号密码登录认证。进行停用判定、多开限制判定、设备绑定判定及收费判定（扣除点数或校验到期时间），登录成功返回临时会话令牌 `login_record`。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "username", type: "string", required: "是", desc: "登录用户名" },
+                                { name: "password", type: "string", required: "是", desc: "登录明文密码" },
+                                { name: "maccode", type: "string", required: "是", desc: "本次登录使用的客户端机器码" }
+                            ],
+                            requestPayload: {
+                                "username": "testuser123",
+                                "password": "password123",
+                                "maccode": "D8FD165858BED7825BEB2F057DBDB14D"
+                            },
+                            successResponse: {
+                                "msg": "用户登录成功",
+                                "data": {
+                                    "id": 252,
+                                    "username": "testuser123",
+                                    "phone": "",
+                                    "email": "",
+                                    "qq": "",
+                                    "authorid": 134,
+                                    "sid": 94,
+                                    "sname": "示例软件",
+                                    "maccode": "D8FD165858BED7825BEB2F057DBDB14D",
+                                    "out_time": "2026-07-06 22:00:00",
+                                    "point": 100,
+                                    "isblacklist": 0,
+                                    "modif_num": 5,
+                                    "heart_time": "2026-06-04 00:04:48",
+                                    "isonline": 1,
+                                    "status": 0,
+                                    "remark": "",
+                                    "city": "北京市",
+                                    "ip": "127.0.0.1",
+                                    "createtime": "2026-06-04 00:04:48",
+                                    "login_record": "776_session_token_eid"
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "用户账户或密码不正确",
+                                "data": [],
+                                "code": -10013
+                            }
+                        },
+                        {
+                            id: "heart",
+                            name: "在线心跳维持",
+                            wtype: 4,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "客户端在线状态心跳维持。客户端应定时（不低于15秒）发送，若超过300秒无心跳包，系统将自动判定掉线释放额度。支持防多开和动态过期判定。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "login_record", type: "string", required: "是", desc: "用户登录成功返回的会话 ID" },
+                                { name: "softMD5", type: "string", required: "是", desc: "本地程序文件的 MD5 校验码" },
+                                { name: "maccode", type: "string", required: "是", desc: "设备机器码" }
+                            ],
+                            requestPayload: {
+                                "login_record": "776_session_token_eid",
+                                "softMD5": "e10adc3949ba59abbe56e057f20f883e",
+                                "maccode": "D8FD165858BED7825BEB2F057DBDB14D"
+                            },
+                            successResponse: {
+                                "msg": "成功",
+                                "type": 2,
+                                "data": {
+                                    "timestamp": 1780753000
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "两次心跳时间小于15秒",
+                                "data": [],
+                                "code": -10040
+                            }
+                        },
+                        {
+                            id: "quit",
+                            name: "安全退出",
+                            wtype: 5,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "客户端安全退出。主动告知云端服务器清除登录会话，在数据库中将当前账号置为离线状态并释放多开额度。注意：当前服务端 quit 方法执行下线逻辑后没有显式返回加密 JSON。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "login_record", type: "string", required: "是", desc: "会话 ID" }
+                            ],
+                            requestPayload: {
+                                "login_record": "776_session_token_eid"
+                            },
+                            successResponse: {
+                                "note": "当前实现仅执行下线逻辑，未显式 return 响应体；客户端可按请求完成或连接关闭处理。"
+                            },
+                            failureResponse: {
+                                "msg": "未找到登录记录",
+                                "data": [],
+                                "code": -10018
+                            }
+                        },
+                        {
+                            id: "changePassword",
+                            name: "修改用户密码",
+                            wtype: 6,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "提供用户自主修改账号密码的通道。新密码长度不得小于 6 位；旧密码按 md5(md5(password)) 与数据库密码比对。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "username", type: "string", required: "是", desc: "用户名" },
+                                { name: "oldPassword", type: "string", required: "是", desc: "旧密码" },
+                                { name: "newPassword", type: "string", required: "是", desc: "新密码" }
+                            ],
+                            requestPayload: {
+                                "username": "testuser123",
+                                "oldPassword": "password123",
+                                "newPassword": "newpassword456"
+                            },
+                            successResponse: {
+                                "msg": "密码修改成功",
+                                "data": [],
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "用户名或密码错误",
+                                "data": [],
+                                "code": -10022
+                            }
+                        },
+                        {
+                            id: "getUserInfo",
+                            name: "查询用户基本资料",
+                            wtype: 12,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "依据当前在线会话 ID 实时拉取用户最新的账号资产详情。例如点数余额、绑定机器码和到期时间。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "login_record", type: "string", required: "是", desc: "会话 ID" }
+                            ],
+                            requestPayload: {
+                                "login_record": "776_session_token_eid"
+                            },
+                            successResponse: {
+                                "msg": "查询成功",
+                                "data": {
+                                    "id": 252,
+                                    "username": "testuser123",
+                                    "phone": "",
+                                    "email": "test@test.com",
+                                    "qq": "123456",
+                                    "maccode": "D8FD165858BED7825BEB2F057DBDB14D",
+                                    "out_time": "2026-07-06 22:00:00",
+                                    "point": 100,
+                                    "isonline": 1,
+                                    "createtime": "2026-06-04 00:04:48"
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "登录状态已经失效",
+                                "data": [],
+                                "code": -10019
+                            }
+                        },
+                        {
+                            id: "changeMaccode",
+                            name: "自助换绑机器码",
+                            wtype: 13,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "用于在软件开启换绑的配置下，用户自主将账号绑定解绑并关联至本次请求的新设备硬件机器码中。换绑会扣减一次换绑次数。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "username", type: "string", required: "是", desc: "用户名" },
+                                { name: "password", type: "string", required: "是", desc: "密码" },
+                                { name: "maccode", type: "string", required: "是", desc: "需要绑定到的新机器码" }
+                            ],
+                            requestPayload: {
+                                "username": "testuser123",
+                                "password": "password123",
+                                "maccode": "NEW_MAC_888899990000"
+                            },
+                            successResponse: {
+                                "msg": "换绑成功",
+                                "data": [],
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "对不起换绑次数不足",
+                                "data": [],
+                                "code": -10042
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "卡密充值与校验",
+                    items: [
+                        {
+                            id: "deposit",
+                            name: "卡密充值/激活",
+                            wtype: 7,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "用户账户充值。校验卡号是否存在、是否停用或被封，并根据卡密类型（点卡或特定时间段卡）自动增加用户的剩余点数或到期时间。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "username", type: "string", required: "是", desc: "需要充值的目标用户账号" },
+                                { name: "card_no", type: "string", required: "是", desc: "卡密密钥串" }
+                            ],
+                            requestPayload: {
+                                "username": "testuser123",
+                                "card_no": "CARD9876543210"
+                            },
+                            successResponse: {
+                                "msg": "充值成功",
+                                "data": {
+                                    "point": 250,
+                                    "time": "2026-08-06 22:00:00"
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "充值卡被使用过了",
+                                "data": [],
+                                "code": -10027
+                            }
+                        },
+                        {
+                            id: "queryCard",
+                            name: "查询卡密信息",
+                            wtype: 16,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "获取指定卡密在未充值前的基本属性，如面值、面值类型、是否激活使用。响应信息出于安全原因，返回的属性中将移除 card_no 敏感明文字段。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "card_no", type: "string", required: "是", desc: "充值卡号" }
+                            ],
+                            requestPayload: {
+                                "card_no": "CARD9876543210"
+                            },
+                            successResponse: {
+                                "msg": "成功",
+                                "data": {
+                                    "id": 45,
+                                    "sid": 35,
+                                    "type": 3, /* 0:点卡, 1:分, 2:时, 3:天, 4:周, 5:月, 6:年 */
+                                    "card_value": 7,
+                                    "status": 0, /* 0:未使用, 1:已使用, 2:封停 */
+                                    "createtime": 1780673422
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "充值卡有误",
+                                "data": [],
+                                "code": -10025
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "云端核心交互",
+                    items: [
+                        {
+                            id: "Variable",
+                            name: "获取远程变量",
+                            wtype: 8,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "读取或设置在系统控制后台为当前软件配置好的全局变量（如提示配置、数据API、服务器开关等），起到云端配置动态分发作用。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "login_record", type: "string", required: "是", desc: "会话 ID" },
+                                { name: "name", type: "string", required: "是", desc: "远程变量名称" },
+                                { name: "value", type: "string", required: "否", desc: "不传表示读取变量值；若传递该字段代表客户端向服务器覆写该变量" }
+                            ],
+                            requestPayload: {
+                                "login_record": "776_session_token_eid",
+                                "name": "announcement_text",
+                                "value": "Optional write value"
+                            },
+                            successResponse: {
+                                "msg": "取出成功",
+                                "data": {
+                                    "value": "今天是2026年6月6日，云端远程变量读取正常！"
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "变量没有找到",
+                                "data": [],
+                                "code": -10031
+                            }
+                        },
+                        {
+                            id: "RemoteFunction",
+                            name: "执行远程代码函数",
+                            wtype: 9,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "运行远程 JS 脚本。使用服务器的 V8 虚拟机执行在控制台预编写的防破解、动态核心算力算法脚本，完美实现防逆向逻辑剥离。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "login_record", type: "string", required: "是", desc: "会话 ID" },
+                                { name: "name", type: "string", required: "是", desc: "云端注册的代码算法标签" },
+                                { name: "functionParam", type: "string", required: "是", desc: "传递给算法脚本的参数数据（URL 编码）" }
+                            ],
+                            requestPayload: {
+                                "login_record": "776_session_token_eid",
+                                "name": "aes_encrypt_func",
+                                "functionParam": "test_string_to_hash"
+                            },
+                            successResponse: {
+                                "msg": "执行成功",
+                                "data": {
+                                    "result": "v8_engine_processed_dynamic_output"
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "算法不属于当前软件",
+                                "data": [],
+                                "code": -10035
+                            }
+                        },
+                        {
+                            id: "ForwardUrl",
+                            name: "调用远程算法转发",
+                            wtype: 10,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "云端服务器代理转发。代理客户端调用后台已绑定的外部第三方接口，实现脱机隐藏真实目标服务器、Token 及 Cookie，提升网关防御级别。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "login_record", type: "string", required: "是", desc: "会话 ID" },
+                                { name: "name", type: "string", required: "是", desc: "在后台建立的代理接口名称" },
+                                { name: "Param", type: "string", required: "是", desc: "发送给目标地址的实际参数" },
+                                { name: "cookie", type: "string", required: "否", desc: "附加代理 Cookie" },
+                                { name: "head", type: "string", required: "否", desc: "附加代理 Header" }
+                            ],
+                            requestPayload: {
+                                "login_record": "776_session_token_eid",
+                                "name": "third_party_trans",
+                                "Param": "item=10&type=query",
+                                "cookie": "session_val=xyz",
+                                "head": "Content-Type: application/x-www-form-urlencoded"
+                            },
+                            successResponse: {
+                                "msg": "取出成功",
+                                "head": "Content-Type: application/json",
+                                "data": {
+                                    "result": "SGVsbG8gV29ybGQgTW9jaw==" /* Base64 encoded target server response */
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "远程算法不存在",
+                                "data": [],
+                                "code": -10036
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "业务计费与消费",
+                    items: [
+                        {
+                            id: "makePoint",
+                            name: "扣除用户点数",
+                            wtype: 11,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "在扣点/消费模式下，客户端调用此接口实时消费用户的点数（例如单次搜索、生成特定资源等业务扣除点数）。最小扣除额度为 1 点。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "login_record", type: "string", required: "是", desc: "会话 ID" },
+                                { name: "point", type: "int", required: "是", desc: "需要扣减的点数值 (>=1)" },
+                                { name: "type", type: "int", required: "是", desc: "功能指令类型，固定传 0" }
+                            ],
+                            requestPayload: {
+                                "login_record": "776_session_token_eid",
+                                "point": 5,
+                                "type": 0
+                            },
+                            successResponse: {
+                                "msg": "扣点成功",
+                                "data": {
+                                    "point": 95
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "用户点数不足",
+                                "data": {
+                                    "point": 2
+                                },
+                                "code": -10039
+                            }
+                        },
+                        {
+                            id: "makeTime",
+                            name: "扣除用户时间",
+                            wtype: 14,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "在时间到期扣减计费模式下，客户端按需直接扣除当前在线账号的可用时长（单位：小时）。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "login_record", type: "string", required: "是", desc: "会话 ID" },
+                                { name: "hour", type: "int", required: "是", desc: "扣除的小时数" },
+                                { name: "type", type: "int", required: "是", desc: "功能指令类型，固定传 0" }
+                            ],
+                            requestPayload: {
+                                "login_record": "776_session_token_eid",
+                                "hour": 2,
+                                "type": 0
+                            },
+                            successResponse: {
+                                "msg": "扣时成功",
+                                "data": {
+                                    "out_time": 1780760200
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "用户不存在",
+                                "data": [],
+                                "code": -10019
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "版本与维护",
+                    items: [
+                        {
+                            id: "queryVer",
+                            name: "查询最新版本及更新",
+                            wtype: 15,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "查询软件的更新机制。校验当前版本，如果服务器开启强更且传入版本过低，将通知客户端停止并返回强制更新包地址。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "version", type: "string", required: "是", desc: "本地程序当前版本号" }
+                            ],
+                            requestPayload: {
+                                "version": "1.0"
+                            },
+                            successResponse: {
+                                "msg": "成功",
+                                "data": {
+                                    "id": 12,
+                                    "sid": 35,
+                                    "ver": "1.1",
+                                    "status": 0, /* 0: 正常, 1: 停用 */
+                                    "checkUpdate": 0, /* 0: 强制更新, 1: 不强制 */
+                                    "updateUrl": "/uploads/files/demo_v1.1.zip",
+                                    "notice": "更新日志：\n1. 优化封包传输\n2. 修复闪退"
+                                },
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "版本不存在",
+                                "data": [],
+                                "code": -10004
+                            }
+                        },
+                        {
+                            id: "feedback",
+                            name: "提交问题意见反馈",
+                            wtype: 17,
+                            method: "POST",
+                            uri: "/webgateway.html",
+                            description: "用户意见反馈及错误上报，后台设有提交频次控制（上次反馈距离本次请求须大于10秒，防爆破灌水）。",
+                            headers: [
+                                { name: "APPID", type: "int", required: "是", desc: "软件 ID；后续业务请求不传 init 请求头，服务端使用软件 privateKey 解密" }
+                            ],
+                            params: [
+                                { name: "login_record", type: "string", required: "是", desc: "会话 ID" },
+                                { name: "msg", type: "string", required: "是", desc: "反馈文本内容" }
+                            ],
+                            requestPayload: {
+                                "login_record": "776_session_token_eid",
+                                "msg": "主程序进入变量加载时，网络连接延迟较高，建议增加备用通道。"
+                            },
+                            successResponse: {
+                                "msg": "成功",
+                                "data": [],
+                                "code": 200
+                            },
+                            failureResponse: {
+                                "msg": "距离上次反馈时间不得低于10秒",
+                                "data": [],
+                                "code": -10050
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Render Sidebar Menu
+        function renderSidebar(filter = "") {
+            const container = document.getElementById("sidebarMenu");
+            container.innerHTML = "";
+
+            projectData.categories.forEach(cat => {
+                // Filter items
+                const filteredItems = cat.items.filter(item =>
+                    item.name.toLowerCase().includes(filter.toLowerCase()) ||
+                    (item.wtype && String(item.wtype).includes(filter))
+                );
+
+                if (filteredItems.length === 0) return;
+
+                const catEl = document.createElement("div");
+                catEl.className = "menu-category";
+
+                const titleEl = document.createElement("div");
+                titleEl.className = "category-title";
+                titleEl.textContent = cat.title;
+                catEl.appendChild(titleEl);
+
+                const listEl = document.createElement("ul");
+                listEl.className = "menu-list";
+
+                filteredItems.forEach(item => {
+                    const itemEl = document.createElement("li");
+                    itemEl.className = "menu-item";
+                    itemEl.id = `menu-${item.id}`;
+                    itemEl.onclick = () => selectApi(item.id);
+
+                    const nameSpan = document.createElement("span");
+                    nameSpan.textContent = item.name;
+                    itemEl.appendChild(nameSpan);
+
+                    if (item.wtype) {
+                        const badge = document.createElement("span");
+                        badge.className = "badge-wtype";
+                        badge.textContent = `wtype: ${item.wtype}`;
+                        itemEl.appendChild(badge);
+                    }
+
+                    listEl.appendChild(itemEl);
+                });
+
+                catEl.appendChild(listEl);
+                container.appendChild(catEl);
+            });
+        }
+
+        // Active State Selection
+        let currentActiveId = "guide";
+
+        function selectApi(id) {
+            // Remove previous active classes
+            const prevActive = document.querySelector(".menu-item.active");
+            if (prevActive) prevActive.classList.remove("active");
+
+            const newActive = document.getElementById(`menu-${id}`);
+            if (newActive) newActive.classList.add("active");
+
+            currentActiveId = id;
+
+            // Find API data
+            let foundItem = null;
+            for (let cat of projectData.categories) {
+                foundItem = cat.items.find(i => i.id === id);
+                if (foundItem) break;
+            }
+
+            if (foundItem) {
+                renderDetail(foundItem);
+            }
+        }
+
+        // Render Detail Workspace Panel
+        function renderDetail(item) {
+            const container = document.getElementById("detailContainer");
+            container.innerHTML = "";
+
+            if (item.isStatusCodes) {
+                // Render status codes page
+                container.innerHTML = `
+                    <h2 class="api-title">${item.name}</h2>
+                    <div class="api-description">${item.description}</div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 120px">状态码 (Code)</th>
+                                    <th style="width: 250px">错误信息 (Msg)</th>
+                                    <th>业务场景与处理逻辑说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong style="color: var(--color-success)">200 / 0</strong></td><td>成功 / 恭喜您注册成功!</td><td>业务执行成功，客户端可解密 data 中的业务数据。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10001</strong></td><td>参数不正确</td><td>数据解密后缺少必填字段（如 login_record，wtype，maccode 等）。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10002</strong></td><td>软件不存在</td><td>传入的 APPID 错误或后台删除了该软件。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10003</strong></td><td>sign验证失败</td><td>签名校验不一致。请检查 MD5 计算时 data 参数原文是否改变及排序。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10004</strong></td><td>版本不存在</td><td>客户端版本号未在后台软件对应的版本列表中配置登记。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10005</strong></td><td>版本停用</td><td>该版本在后台被标记为“停用”。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10006</strong></td><td>请更新到最新版本...</td><td>后台开启了强制更新，且当前版本不是最新版本，客户端需要拦截并引导用户下载更新包。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10008</strong></td><td>用户名已经被注册啦</td><td>用户注册重复拦截。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10009</strong></td><td>注册失败</td><td>数据库写入异常（用户名/设备流控限制等引起）。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10010</strong></td><td>参数解密失败</td><td>数据密文破损、算法冲突（AES/DES）或会话密钥不一致。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10011</strong></td><td>软件关闭了验证</td><td>整个软件的运行状态在后台被配置为“关闭验证”。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10012</strong></td><td>用户名或者密码长度小于6</td><td>输入规则校验拦截（账号和密码必须6位以上）。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10013</strong></td><td>用户账户或密码不正确</td><td>身份校验登录匹配失败；或在充值/换绑时指定的用户账号不存在。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10014</strong></td><td>软件使用时间已经过期啦</td><td>账号的使用授权期（out_time）已到期，限制其使用权。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10015</strong></td><td>软件使用点数剩余不足啦</td><td>按点数收费时，用户点数少于后台配置单次登录/每次使用需要扣除的步长。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10016</strong></td><td>用户被锁定,禁止登陆</td><td>账号在后台被禁用封锁（进入黑名单状态）。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10018</strong></td><td>多开限制超限 / 未找到登录记录</td><td>当前账号同时在线设备数已满；或扣点/心跳会话无法在库中检索到活动记录。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10019</strong></td><td>登录状态已经失效 / 用户不存在</td><td>在线验证时，数据库内无法找到当前活跃会话标识，或会话已被置为离线。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10020</strong></td><td>用户状态被锁定</td><td>心跳过程中，该账号状态突变为禁用封禁。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10021</strong></td><td>软件仅限制在绑定的机器上使用</td><td>单机限制防多开模式开启时，登录机器码与原绑定记录不同。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10022</strong></td><td>用户名或密码错误</td><td>修改密码时输入的老凭据验证失败。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10023</strong></td><td>用户名或密码长度不能小于6 / 新密码长度不能小于6</td><td>注册、登录或修改密码时的长度规则校验失败。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10024</strong></td><td>密码修改失败</td><td>数据库执行密码修改更新故障。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10025</strong></td><td>充值卡有误</td><td>充值时输入的卡号在系统中完全不存在。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10027</strong></td><td>充值卡被使用过了</td><td>充值卡的状态已经是使用过状态（status=1）。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10028</strong></td><td>充值卡被封停</td><td>该充值卡密已被管理员撤销封停。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10029</strong></td><td>充值卡状态保存失败</td><td>卡密状态写入为已使用时数据库保存失败。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10031</strong></td><td>变量没有找到</td><td>获取远程变量时，变量名标识不正确或未在后台配置添加。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10033</strong></td><td>变量不属于当前软件</td><td>禁止调用非当前 APPID 关联的远程变量资产。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10034</strong></td><td>算法不存在</td><td>执行远程代码函数时，后台算法标签不匹配。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10035</strong></td><td>算法不属于当前软件</td><td>禁止跨越权限调用其他软件的代码算法。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10036</strong></td><td>远程算法不存在</td><td>算法转发名在数据库中查无记录。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10037</strong></td><td>远程算法不属于当前软件 / 远程算法状态非可用</td><td>算法转发资产不属于当前 APPID，或后台状态不是可用。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10038</strong></td><td>赠点功能维护中 / 赠时功能维护中 / 扣点失败</td><td>当前实现只开放扣减逻辑，赠送逻辑返回维护中；也用于扣减保存失败。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10039</strong></td><td>用户点数不足</td><td>扣减点数接口响应：账户点数不足以扣除本次请求点数。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10040</strong></td><td>两次心跳时间小于15秒</td><td>心跳接口调用频次过高（距离上次保存心跳记录少于15秒）。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10041</strong></td><td>用户已经绑定到当前机器啦</td><td>修改绑定时，新传入的机器码和已有机器码完全一致。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10042</strong></td><td>对不起换绑次数不足</td><td>用户自助换绑可用次数（modif_num）已耗尽，需联系站长手动重置。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10044</strong></td><td>登录状态已经失效</td><td>心跳校验包发现数据库的会话已被释放或过期。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10045</strong></td><td>封包时间偏差大</td><td>客户端机器时间异常偏差过大，拦截签名重放。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10046</strong></td><td>到期时间已经是系统最大到期时间2038</td><td>时间卡充值时，用户到期时间已达到 32 位时间戳上限。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10047</strong></td><td>反馈失败</td><td>用户反馈消息写入数据库失败。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10048</strong></td><td>软件关闭了注册</td><td>该软件在后台管理系统关闭了新用户自助注册通道。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10049</strong></td><td>今天注册太多次啦,明天再来吧</td><td>该 IP 地址或该机器码设备今日注册频次超出系统阀值限制。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10050</strong></td><td>距离上次反馈时间不得低于10秒</td><td>意见上报反馈过于频繁拦截（防灌水封包）。</td></tr>
+                                <tr><td><strong style="color: var(--color-error)">-10051</strong></td><td>软件关闭了换绑</td><td>后台设置将该软件的“用户自助换绑”开关关闭，禁止换绑机器码。</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                return;
+            }
+
+            if (item.isGuide) {
+                // Render guide page
+                container.innerHTML = `
+                    <h2 class="api-title">${item.name}</h2>
+                    <div class="api-description">${item.description}</div>
+                    
+                    <div class="guide-section">
+                        <h3>1. 通信入口与密钥更替机制 (Gateway & Key Exchange)</h3>
+                        <p>客户端业务接口统一请求 <code>/webgateway.html</code>，服务端实际路由到 <code>api/webgateway</code>，再按解密后的 <code>wtype</code> 分发到具体业务方法：</p>
+                        <ul>
+                            <li><strong>请求头：</strong>所有请求必须携带 <code>APPID</code>。初始化请求额外携带 <code>init: 1</code>；后续业务请求不要携带 <code>init</code>。</li>
+                            <li><strong>系统初始化验证阶段 (wtype = 1)：</strong>由于此时还未建立会话密钥，客户端请求体使用<strong>当前软件密钥 (Key) 的前24位</strong>作为对称加密密钥进行加密；服务端此阶段强制按 <code>encryptType = 0</code> 处理。</li>
+                            <li><strong>后续业务交互阶段 (wtype &gt; 1)：</strong>在初始化验证成功响应后，客户端会收到解密后的 <code>privateKey</code>（本次会话密钥）和 <code>encryptType</code>。之后所有业务接口均需使用此 <code>privateKey</code> 加密。当 <code>encryptType = 0</code> 时，算法为 <code>DES</code>；当 <code>encryptType = 1</code> 时，算法为 <code>AES</code>。加密模式均为 <code>ECB/PKCS5Padding</code>。</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guide-section">
+                        <h3>2. 签名防篡改校验 (sign)</h3>
+                        <p>每个发往 <code>/webgateway.html</code> 的包体都必须计算 <code>sign</code> 字段。计算算法如下：</p>
+                        <p><code>sign = MD5(appid + data字段值 + 签名校验盐 + timestamp)</code></p>
+                        <ul>
+                            <li><strong>初始化验证请求：</strong>签名校验盐为<strong>软件密钥的前24位</strong>。</li>
+                            <li><strong>其它所有后续业务请求：</strong>签名校验盐为初始化验证中返回的 <strong><code>privateSalt</code></strong>。</li>
+                        </ul>
+                        <p>注意：参数中的 <code>data</code> 是一个 JSON 格式的数组。服务端解密后如果数组里只有一个对象，会取第一个对象作为业务参数；如果有多个对象，则保留数组。<code>sign</code> 须采用 32 位小写 MD5 进行格式转换。</p>
+                    </div>
+
+                    <div class="guide-section">
+                        <h3>3. 指令动作代码对照表 (wtype)</h3>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 150px">wtype 指令值</th>
+                                        <th style="width: 250px">接口名称</th>
+                                        <th>核心开发要点</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><strong>1</strong></td><td>初始化验证</td><td>获取通信密钥、签名盐、版本强制升级核对</td></tr>
+                                    <tr><td><strong>2</strong></td><td>用户注册</td><td>设备机器码注册、IP限流校验、免费福利赠送</td></tr>
+                                    <tr><td><strong>3</strong></td><td>用户登录</td><td>到期判断、扣点验证、在线心跳令牌分发</td></tr>
+                                    <tr><td><strong>4</strong></td><td>在线心跳维持</td><td>15秒至300秒检测，掉线自动下线，防封包碰撞</td></tr>
+                                    <tr><td><strong>5</strong></td><td>安全退出</td><td>主动下线释放连接额度</td></tr>
+                                    <tr><td><strong>6</strong></td><td>修改密码</td><td>自助旧密码认证，重置新通行证密钥</td></tr>
+                                    <tr><td><strong>7</strong></td><td>卡密充值/激活</td><td>面值转换为时间或点数，计入卡密操作历史</td></tr>
+                                    <tr><td><strong>8</strong></td><td>获取远程变量</td><td>云端分发动态系统全局/单账号变量</td></tr>
+                                    <tr><td><strong>9</strong></td><td>执行远程代码函数</td><td>云端V8引擎脱机计算核心逻辑</td></tr>
+                                    <tr><td><strong>10</strong></td><td>调用远程算法转发</td><td>代理中转第三方API，高防脱机必备</td></tr>
+                                    <tr><td><strong>11</strong></td><td>扣除用户点数</td><td>消费扣除次数或金币</td></tr>
+                                    <tr><td><strong>12</strong></td><td>查询用户基本资料</td><td>获取最新的点数和截止到期期限</td></tr>
+                                    <tr><td><strong>13</strong></td><td>自助换绑机器码</td><td>物理网卡码自主重置</td></tr>
+                                    <tr><td><strong>14</strong></td><td>扣除用户时间</td><td>精确按小时扣除软件试用周期</td></tr>
+                                    <tr><td><strong>15</strong></td><td>查询最新版本及更新</td><td>静默核对热更新资源包地址</td></tr>
+                                    <tr><td><strong>16</strong></td><td>查询卡密详情与面值</td><td>购买卡密后面值额度防骗提前查询</td></tr>
+                                    <tr><td><strong>17</strong></td><td>提交问题意见反馈</td><td>客户端崩溃或需求日志收集</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render API details
+            let headersHtml = "";
+            if (item.headers && item.headers.length > 0) {
+                headersHtml = `
+                    <div style="margin-top: 24px; margin-bottom: 24px;">
+                        <h4 style="font-size: 15px; color: var(--text-heading); margin-bottom: 12px;">请求头 (Request Headers)</h4>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 200px">请求头字段</th>
+                                        <th style="width: 120px">参数类型</th>
+                                        <th style="width: 100px">是否必填</th>
+                                        <th>参数说明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${item.headers.map(h => `
+                                        <tr>
+                                            <td class="param-name">${h.name}</td>
+                                            <td class="param-type">${h.type}</td>
+                                            <td class="param-req yes">${h.required}</td>
+                                            <td>${h.desc}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let paramsHtml = "";
+            if (item.params && item.params.length > 0) {
+                paramsHtml = `
+                    <div style="margin-top: 24px; margin-bottom: 24px;">
+                        <h4 style="font-size: 15px; color: var(--text-heading); margin-bottom: 12px;">加密参数列表 (Data JSON 字段)</h4>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 200px">字段名称</th>
+                                        <th style="width: 120px">数据类型</th>
+                                        <th style="width: 100px">是否必填</th>
+                                        <th>描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${item.params.map(p => `
+                                        <tr>
+                                            <td class="param-name">${p.name}</td>
+                                            <td class="param-type">${p.type}</td>
+                                            <td class="param-req ${p.required === '是' ? 'yes' : 'no'}">${p.required}</td>
+                                            <td>${p.desc}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="api-meta-row">
+                    <span class="method-badge">${item.method}</span>
+                    <span class="endpoint-path">${item.uri}</span>
+                </div>
+                <h2 class="api-title">${item.name}</h2>
+                <div class="api-description">${item.description}</div>
+                
+                <!-- Tabs list -->
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="switchTab(event, 'tab-params')">参数说明</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'tab-request')">请求示例 (JSON)</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'tab-success')">成功返回 (示例)</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'tab-failure')">失败返回 (示例)</button>
+                </div>
+                
+                <!-- Tab Panel: Parameters list -->
+                <div id="tab-params" class="tab-content active">
+                    ${headersHtml}
+                    ${paramsHtml}
+                </div>
+                
+                <!-- Tab Panel: Request Raw JSON Payload -->
+                <div id="tab-request" class="tab-content">
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span class="code-lang">json</span>
+                            <button class="btn-copy" onclick="copyCode('code-req-text')">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                复制代码
+                            </button>
+                        </div>
+                        <pre><code id="code-req-text">${JSON.stringify(item.requestPayload, null, 4)}</code></pre>
+                    </div>
+                </div>
+                
+                <!-- Tab Panel: Success Response JSON -->
+                <div id="tab-success" class="tab-content">
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span class="code-lang">json</span>
+                            <button class="btn-copy" onclick="copyCode('code-success-text')">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                复制代码
+                            </button>
+                        </div>
+                        <pre><code id="code-success-text">${JSON.stringify(item.successResponse, null, 4)}</code></pre>
+                    </div>
+                </div>
+                
+                <!-- Tab Panel: Failure Response JSON -->
+                <div id="tab-failure" class="tab-content">
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span class="code-lang">json</span>
+                            <button class="btn-copy" onclick="copyCode('code-failure-text')">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                复制代码
+                            </button>
+                        </div>
+                        <pre><code id="code-failure-text">${JSON.stringify(item.failureResponse, null, 4)}</code></pre>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Tab switcher controller
+        function switchTab(event, tabId) {
+            const container = event.target.parentElement;
+
+            // Remove active buttons classes
+            container.querySelectorAll(".tab-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+            event.target.classList.add("active");
+
+            // Hide all panels
+            const panels = container.parentElement.querySelectorAll(".tab-content");
+            panels.forEach(p => {
+                p.classList.remove("active");
+            });
+
+            // Show target panel
+            document.getElementById(tabId).classList.add("active");
+        }
+
+        // Search Input controller
+        function handleSearch() {
+            const filter = document.getElementById("searchInput").value;
+            renderSidebar(filter);
+
+            // Re-apply active state to current item if it still exists
+            const activeEl = document.getElementById(`menu-${currentActiveId}`);
+            if (activeEl) {
+                activeEl.classList.add("active");
+            }
+        }
+
+        // Clipboard Copy implementation
+        function copyCode(elementId) {
+            const codeText = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                const toast = document.getElementById("copyToast");
+                toast.classList.add("show");
+                setTimeout(() => {
+                    toast.classList.remove("show");
+                }, 2000);
+            }).catch(err => {
+                console.error("Could not copy text: ", err);
+            });
+        }
+
+        // Initialization
+        window.onload = () => {
+            renderSidebar();
+            selectApi("guide");
+        };
+    </script>
+</body>
+
+</html>
